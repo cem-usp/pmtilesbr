@@ -17,7 +17,7 @@ A list of files can be found in the [`pmtiles`](pmtiles) directory, all hosted a
 
 To use a file, pass its URL directly to your application. Example:
 
-<https://cem-usp.github.io/pmtiles/geobr-2020-brazil-min-zoom-2-max-zoom-10-simplified.pmtiles>
+<https://cem-usp.github.io/pmtiles/pmtiles/geobr-2020-brazil-min-zoom-2-max-zoom-10-simplified.pmtiles>
 
 ## Rendering
 
