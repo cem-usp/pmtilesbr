@@ -1,0 +1,16 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "PMTiles",
+    "section": "",
+    "text": "This repository hosts PMTiles files to help with spatial visualization and analysis."
+  },
+  {
+    "objectID": "index.html#files",
+    "href": "index.html#files",
+    "title": "PMTiles",
+    "section": "Files",
+    "text": "Files\n\nWorld\n\nYear: 2020\nResolution: 5\nVersion: latest\nMinimum Zoom: 2\nMaximum Zoom: 10\nFile: gadm-2020-world-resolution-5-version-latest-min-zoom-2-max-zoom-10.pmtiles\n\nBrazil\n\nYear: 2020\nMinimum Zoom: 2\nMaximum Zoom: 10\nSimplified: TRUE\nFile: geobr-2020-brazil-min-zoom-2-max-zoom-10-simplified.pmtiles\n\nBrazil Regions\n\nYear: 2020\nMinimum Zoom: 2\nMaximum Zoom: 10\nSimplified: TRUE\nFile: geobr-2020-brazil-regions-min-zoom-2-max-zoom-10-simplified.pmtiles\n\nBrazil States\n\nYear: 2020\nMinimum Zoom: 2\nMaximum Zoom: 10\nSimplified: TRUE\nFile: geobr-2020-brazil-states-min-zoom-2-max-zoom-10-simplified.pmtiles\n\nBrazil Municipalities\n\nYear: 2024\nMinimum Zoom: 2\nMaximum Zoom: 10\nSimplified: TRUE\nFile: geobr-2024-brazil-municipalities-min-zoom-2-max-zoom-10-simplified.pmtiles"
+  }
+]
