@@ -122,11 +122,16 @@ pattern <- paste0(
 ```
 
 ```{r}
+pattern
+```
+
+```{r}
 #| eval: false
 
 shape |>
   pm_create(
     here(data_dir, pattern),
+    layer_name = name,
     min_zoom = min_zoom,
     max_zoom = max_zoom
   )
@@ -135,7 +140,8 @@ shape |>
 ## Inspect PMTiles
 
 ```{r}
-here(data_dir, pattern) |> pm_show()
+here(data_dir, pattern) |>
+  pm_show(tilejson = TRUE)
 ```
 
 ## Visualize PMTiles

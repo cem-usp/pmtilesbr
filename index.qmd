@@ -8,6 +8,7 @@ This repository hosts [PMTiles](https://docs.protomaps.com/pmtiles/) files to he
 
 - World
   - Year: 2020
+  - Layer: `world`
   - Resolution: 5
   - Version: latest
   - Minimum Zoom: 2
@@ -16,6 +17,7 @@ This repository hosts [PMTiles](https://docs.protomaps.com/pmtiles/) files to he
 
 - Brazil
   - Year: 2020
+  - Layer: `brazil`
   - Minimum Zoom: 2
   - Maximum Zoom: 10
   - Simplified: TRUE
@@ -23,6 +25,7 @@ This repository hosts [PMTiles](https://docs.protomaps.com/pmtiles/) files to he
 
 - Brazil Regions
   - Year: 2020
+  - Layer: `brazil-regions`
   - Minimum Zoom: 2
   - Maximum Zoom: 10
   - Simplified: TRUE
@@ -30,6 +33,7 @@ This repository hosts [PMTiles](https://docs.protomaps.com/pmtiles/) files to he
 
 - Brazil States
   - Year: 2020
+  - Layer: `brazil-states`
   - Minimum Zoom: 2
   - Maximum Zoom: 10
   - Simplified: TRUE
@@ -37,6 +41,7 @@ This repository hosts [PMTiles](https://docs.protomaps.com/pmtiles/) files to he
 
 - Brazil Municipalities
   - Year: 2024
+  - Layer: `brazil-municipalities`
   - Minimum Zoom: 2
   - Maximum Zoom: 10
   - Simplified: TRUE
