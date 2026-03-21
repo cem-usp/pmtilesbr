@@ -12,7 +12,7 @@ This repository hosts [PMTiles](https://docs.protomaps.com/pmtiles/) files to he
   - Version: latest
   - Minimum Zoom: 2
   - Maximum Zoom: 10
-  - File: [`gadm-2020-world-resolution-5-version-latest-min-zoom-2-max-zoom-10.pmtiles`](pmtiles/gadm-2020-world-resolution-5-version-latest-min-zoom-2-max-zoom-10.pmtiles)
+  - File: [`gadm-2026-world-resolution-5-version-latest-min-zoom-2-max-zoom-10.pmtiles`](pmtiles/gadm-2026-world-resolution-5-version-latest-min-zoom-2-max-zoom-10.pmtiles)
 
 - Brazil
   - Year: 2020
