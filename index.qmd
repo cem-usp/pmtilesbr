@@ -379,14 +379,15 @@ Sourced from the [`geodata`](https://rspatial.github.io/geodata/) R package [@hi
 
 - Layer: `"world"`
 - Resolution: 5
+- Level: 0
 - Version: `"latest"` (created in 2026)
 - Minimum Zoom: 0
 - Maximum Zoom: 6/10
 
 #### Files
 
-- [`gadm-world-resolution-5-version-latest-2026-min-zoom-0-max-zoom-6.pmtiles`](pmtiles/gadm-world-resolution-5-version-latest-2026-min-zoom-0-max-zoom-6.pmtiles)
-- [`gadm-world-resolution-5-version-latest-2026-min-zoom-0-max-zoom-10.pmtiles`](pmtiles/gadm-world-resolution-5-version-latest-2026-min-zoom-0-max-zoom-10.pmtiles)
+- [`gadm-world-resolution-5-level-0-version-latest-2026-min-zoom-0-max-zoom-6.pmtiles`](pmtiles/gadm-world-resolution-5-level-0-version-latest-2026-min-zoom-0-max-zoom-6.pmtiles)
+- [`gadm-world-resolution-5-level-0-version-latest-2026-min-zoom-0-max-zoom-10.pmtiles`](pmtiles/gadm-world-resolution-5-level-0-version-latest-2026-min-zoom-0-max-zoom-10.pmtiles)
 
 #### View
 
@@ -397,7 +398,10 @@ Sourced from the [`geodata`](https://rspatial.github.io/geodata/) R package [@hi
 file <- file.path(
   "https://cem-usp.github.io/pmtilesbr",
   "pmtiles",
-  "gadm-world-resolution-5-version-latest-2026-min-zoom-0-max-zoom-6.pmtiles"
+  paste0(
+    "gadm-world-resolution-5-level-0-version-latest-2026-",
+    "min-zoom-0-max-zoom-6.pmtiles"
+  )
 )
 ```
 
@@ -435,9 +439,7 @@ file |>
       fill_opacity = 1
     ),
     line_width = 0.5,
-    seed = 1998,
-    minZoom = 2,
-    maxZoom = 10
+    seed = 1998
   )
 ```
 
