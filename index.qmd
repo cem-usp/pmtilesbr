@@ -7,13 +7,15 @@ library(here)
 here("R", ".setup.R") |> source()
 ```
 
+## Overview {.first-h2}
+
 :::: {style="display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start;"}
 ::: {}
 This website hosts [PMTiles](https://docs.protomaps.com/pmtilesbr/) files for spatial visualization and analysis in Brazil.
 
-[PMTiles](https://docs.protomaps.com/pmtilesbr/) is a format for storing and serving tiled geospatial data. It is designed to be efficient, scalable, and easy to use, making it ideal for web applications and data visualization.
+[PMTiles](https://docs.protomaps.com/pmtiles/) is a format for storing and serving tiled geospatial data. It is designed to be efficient, scalable, and easy to use, making it ideal for web applications and data visualization.
 
-We plan to move these files to a more permanent hosting solution in the future, but for now, they are available here for public use.
+We plan to move these files to a more permanent hosting solution in the future.
 :::
 
 ::: {style="margin-top: -1rem;"}
@@ -22,26 +24,59 @@ We plan to move these files to a more permanent hosting solution in the future, 
 ::::
 
 ::: {.callout-note}
-Brazil municipality boundaries as PMTiles, sourced from the [`geobr`](https://ipeagit.github.io/geobr/) R package [@pereirab].
+The map below shows Brazil municipality boundaries as PMTiles, sourced from the [`geobr`](https://ipeagit.github.io/geobr/) R package [@pereirab].
+:::
+
+::: {.callout-tip}
+*Click and drag* to pan. *Right-click and drag* to rotate. *Hover* over a shape to see the municipality name. *Use the controls* to zoom, take a screenshot, or view in fullscreen.
 :::
 
 ```{r}
+#| label: Set the Environment
 #| include: false
 
 library(brandr)
+library(checkmate)
+library(cli)
+library(dplyr)
+library(fs)
+library(geobr)
+library(geodata)
+library(httr2)
 library(magrittr)
 library(mapgl)
-library(orbis) # github.com/danielvartan/orbis
 library(pmtiles) # github.com/walkerke/pmtiles
-library(RColorBrewer)
-library(viridis)
-library(yyjsonr)
+library(sf)
 ```
 
 ```{r}
 #| include: false
 
-pmtiles_file <- file.path(
+here("R", "plot_maplibre.R") |> source()
+```
+
+```{r}
+#| include: false
+
+raw_data_dir <- here("data-raw")
+data_dir <- here("pmtiles")
+```
+
+```{r}
+#| include: false
+
+for (i in c(data_dir, raw_data_dir)) {
+  if (!dir_exists(i)) {
+    dir_create(i, recurse = TRUE)
+  }
+}
+```
+
+```{r}
+#| label: column screen
+#| include: false
+
+file <- file.path(
   "https://cem-usp.github.io/pmtilesbr",
   "pmtiles",
   "geobr-2024-read_municipality-simplified-min-zoom-2-max-zoom-10.pmtiles"
@@ -49,123 +84,57 @@ pmtiles_file <- file.path(
 ```
 
 ```{r}
-#| eval: false
 #| include: false
 
-pmtiles_metadata <-
-  pmtiles_file |>
-  pm_show(tilejson = TRUE)
-```
-
-```{r}
-#| eval: false
-#| include: false
-
-pmtiles_layer <-
-  pmtiles_metadata |>
-  extract2("vector_layers") |>
-  extract2(1) |>
-  extract2("id")
-```
-
-```{r}
-#| eval: false
-#| include: false
-
-pmtiles_bbox <-
-  pmtiles_metadata |>
-  extract2("bounds") |>
-  unlist()
-```
-
-```{r}
-#| eval: false
-#| include: false
-
-set.seed(1998)
-
-scale_fill_mapgl <- match_expr(
-  column = "code_state",
-  values = 11:53,
-  stops = c(
-    get_brand_color("red"),
-    get_brand_color("black"),
-    get_brand_color("yellow")
-  ) |>
-    sample(
-      length(11:53),
-      replace = TRUE,
-      prob = c(7, 1, 2)
-    ),
-  default = get_brand_color("gray")
+municipality_data <- read_municipality(
+  year = 2024,
+  simplified = TRUE,
+  showProgress = FALSE,
+  keep_areas_operacionais = FALSE
 )
 ```
 
 ```{r}
-#| eval: false
+#| include: false
+
+municipality_data |> glimpse()
+```
+
+```{r}
 #| column: screen
 #| echo: false
 
-pmtiles_metadata |>
-  extract2("bounds") |>
-  unlist() |>
-  maplibre(
-    style = carto_style("voyager"),
-    bounds = _,
-    projection = "mercator",
-    scrollZoom = FALSE
-  ) |>
-  add_pmtiles_source(
-    id = "state_borders",
-    url = pmtiles_file,
-    source_type = "vector"
-  ) |>
-  add_fill_layer(
-    id = "screen_fill",
-    source = "state_borders",
-    source_layer = pmtiles_layer,
-    fill_color = scale_fill_mapgl,
-    fill_outline_color = get_brand_color("white"),
-    fill_opacity = 1,
-    tooltip = "name_state",
+file |>
+  plot_maplibre(
+    column = "code_muni",
+    values = municipality_data |>
+      extract2("code_muni"),
+    tooltip = "name_muni",
     hover_options = list(
       fill_color = get_brand_color("gray-l50"),
       fill_opacity = 1
-    )
-  ) |>
-  add_line_layer(
-    id = "screen_outline",
-    source = "state_borders",
-    source_layer = pmtiles_layer,
-    line_color = get_brand_color("white"),
-    line_width = 2
-  ) |>
-  add_navigation_control() |>
-  add_screenshot_control() |>
-  add_fullscreen_control()
+    ),
+    line_width = 0.01,
+    scroll_zoom = FALSE,
+    seed = 1998
+  )
 ```
 
-```{r}
-#| column: screen
-#| echo: false
+## Why Use PMTiles?
 
-maplibre(
-  projection = "mercator",
-  scrollZoom = FALSE
-)
-```
+When working with complex geometries in web mapping applications like [Mapbox](https://www.mapbox.com/), [MapLibre](https://maplibre.org/), and [Leaflet](https://leafletjs.com/), performance can become a real problem. Shapes with many vertices make rendering slow, bloat file sizes, and generally make life harder. [PMTiles](https://docs.protomaps.com/pmtilesbr/) addresses this by letting you serve precompiled tiles directly from the web, rather than bundling them into your application.
 
 ## Files
 
 ::: {.callout-note}
-See the code repository [README](https://github.com/cem-usp/pmtilesbr#pmtilesbr) to learn more about how the files were created.
+See the code repository [README](https://github.com/cem-usp/pmtilesbr#pmtilesbr-) to learn more about how the files were created.
 :::
 
 ::: {.callout-tip}
 Unless you really need to, use the simplified versions of the files, which are smaller and faster to load. The non-simplified versions are available for those who need the highest level of detail, but they may not be necessary for most applications.
 :::
 
-::: {.panel-tabset}
+::: {.panel-tabset .map-tabset}
 
 ## `geobr::read_country()`
 
@@ -186,6 +155,28 @@ Sourced from the [`geobr`](https://ipeagit.github.io/geobr/) R package [@pereira
 
 #### View
 
+```{r}
+#| label: geobr::read_country()
+#| include: false
+
+file <- file.path(
+  "https://cem-usp.github.io/pmtilesbr",
+  "pmtiles",
+  "geobr-2020-read_country-simplified-min-zoom-2-max-zoom-10.pmtiles"
+)
+```
+
+```{r}
+#| echo: false
+
+file |>
+  plot_maplibre(
+    column = "code_muni",
+    fill_color = get_brand_color("red"),
+    line_width = 1
+  )
+```
+
 ## `geobr::read_region()`
 
 Sourced from the [`geobr`](https://ipeagit.github.io/geobr/) R package [@pereirab].
@@ -205,6 +196,51 @@ Sourced from the [`geobr`](https://ipeagit.github.io/geobr/) R package [@pereira
 
 #### View
 
+```{r}
+#| label: geobr::read_region()
+#| include: false
+
+file <- file.path(
+  "https://cem-usp.github.io/pmtilesbr",
+  "pmtiles",
+  "geobr-2020-read_region-simplified-min-zoom-2-max-zoom-10.pmtiles"
+)
+```
+
+```{r}
+#| include: false
+
+region_data <- read_region(
+  year = 2020,
+  simplified = TRUE,
+  showProgress = FALSE
+)
+```
+
+```{r}
+#| include: false
+
+region_data |> glimpse()
+```
+
+```{r}
+#| echo: false
+
+file |>
+  plot_maplibre(
+    column = "code_region",
+    values = region_data |>
+      extract2("code_region"),
+    tooltip = "name_region",
+    hover_options = list(
+      fill_color = get_brand_color("gray-l50"),
+      fill_opacity = 1
+    ),
+    line_width = 1,
+    seed = 2013
+  )
+```
+
 ## `geobr::read_state()`
 
 Sourced from the [`geobr`](https://ipeagit.github.io/geobr/) R package [@pereirab].
@@ -221,6 +257,53 @@ Sourced from the [`geobr`](https://ipeagit.github.io/geobr/) R package [@pereira
 
 - [`geobr-2020-read_state-min-zoom-2-max-zoom-10.pmtiles`](pmtiles/geobr-2020-read_state-min-zoom-2-max-zoom-10.pmtiles)
 - [`geobr-2020-read_state-simplified-min-zoom-2-max-zoom-10.pmtiles`](pmtiles/geobr-2020-read_state-simplified-min-zoom-2-max-zoom-10.pmtiles)
+
+#### View
+
+```{r}
+#| label: geobr::read_state()
+#| include: false
+
+file <- file.path(
+  "https://cem-usp.github.io/pmtilesbr",
+  "pmtiles",
+  "geobr-2020-read_state-simplified-min-zoom-2-max-zoom-10.pmtiles"
+)
+```
+
+```{r}
+#| include: false
+
+state_data <- read_state(
+  year = 2020,
+  simplified = TRUE,
+  showProgress = FALSE
+)
+```
+
+```{r}
+#| include: false
+
+state_data |> glimpse()
+```
+
+```{r}
+#| echo: false
+
+file |>
+  plot_maplibre(
+    column = "code_state",
+    values = state_data |>
+      extract2("code_state"),
+    tooltip = "name_state",
+    hover_options = list(
+      fill_color = get_brand_color("gray-l50"),
+      fill_opacity = 1
+    ),
+    line_width = 1,
+    seed = 2000
+  )
+```
 
 ## `geobr::read_municipality()`
 
@@ -241,6 +324,53 @@ Sourced from the [`geobr`](https://ipeagit.github.io/geobr/) R package [@pereira
 
 #### View
 
+```{r}
+#| label: geobr::read_municipality()
+#| include: false
+
+file <- file.path(
+  "https://cem-usp.github.io/pmtilesbr",
+  "pmtiles",
+  "geobr-2024-read_municipality-simplified-min-zoom-2-max-zoom-10.pmtiles"
+)
+```
+
+```{r}
+#| eval: false
+#| include: false
+
+municipality_data <- read_municipality(
+  year = 2024,
+  simplified = TRUE,
+  showProgress = FALSE,
+  keep_areas_operacionais = FALSE
+)
+```
+
+```{r}
+#| include: false
+
+municipality_data |> glimpse()
+```
+
+```{r}
+#| echo: false
+
+file |>
+  plot_maplibre(
+    column = "code_muni",
+    values = municipality_data |>
+      extract2("code_muni"),
+    tooltip = "name_muni",
+    hover_options = list(
+      fill_color = get_brand_color("gray-l50"),
+      fill_opacity = 1
+    ),
+    line_width = 0.01,
+    seed = 1998
+  )
+```
+
 ## `geodata::world()`
 
 Sourced from the [`geodata`](https://rspatial.github.io/geodata/) R package [@hijmansa].
@@ -250,14 +380,66 @@ Sourced from the [`geodata`](https://rspatial.github.io/geodata/) R package [@hi
 - Layer: `"world"`
 - Resolution: 5
 - Version: `"latest"` (created in 2026)
-- Minimum Zoom: 2
-- Maximum Zoom: 10
+- Minimum Zoom: 0
+- Maximum Zoom: 6/10
 
 #### Files
 
-- [`gadm-world-resolution-5-version-latest-2026-min-zoom-2-max-zoom-10.pmtiles`](pmtiles/gadm-world-resolution-5-version-latest-2026-min-zoom-2-max-zoom-10.pmtiles)
+- [`gadm-world-resolution-5-version-latest-2026-min-zoom-0-max-zoom-6.pmtiles`](pmtiles/gadm-world-resolution-5-version-latest-2026-min-zoom-0-max-zoom-6.pmtiles)
+- [`gadm-world-resolution-5-version-latest-2026-min-zoom-0-max-zoom-10.pmtiles`](pmtiles/gadm-world-resolution-5-version-latest-2026-min-zoom-0-max-zoom-10.pmtiles)
 
 #### View
+
+```{r}
+#| label: geodata::world()
+#| include: false
+
+file <- file.path(
+  "https://cem-usp.github.io/pmtilesbr",
+  "pmtiles",
+  "gadm-world-resolution-5-version-latest-2026-min-zoom-0-max-zoom-6.pmtiles"
+)
+```
+
+```{r}
+#| include: false
+
+world_data <- world(
+  resolution = 5,
+  level = 0,
+  path = raw_data_dir,
+  version = "latest"
+) |>
+  st_as_sf()
+```
+
+```{r}
+#| include: false
+
+world_data |> glimpse()
+```
+
+```{r}
+#| echo: false
+#| eval: false
+
+file |>
+  plot_maplibre(
+    column = "GID_0",
+    values = world_data |>
+      extract2("GID_0"),
+    bounds = c(-180, -75, 180, 90),
+    tooltip = "NAME_0",
+    hover_options = list(
+      fill_color = get_brand_color("gray-l50"),
+      fill_opacity = 1
+    ),
+    line_width = 0.5,
+    seed = 1998,
+    minZoom = 2,
+    maxZoom = 10
+  )
+```
 
 :::
 

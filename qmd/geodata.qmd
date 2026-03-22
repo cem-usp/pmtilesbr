@@ -86,15 +86,19 @@ resolution <- 5
 ```
 
 ```{r}
+level <- 0
+```
+
+```{r}
 version <- "latest"
 ```
 
 ```{r}
-min_zoom <- 2
+min_zoom <- 0
 ```
 
 ```{r}
-max_zoom <- 10
+max_zoom <- 6
 ```
 
 ```{r}
@@ -113,8 +117,9 @@ name <- "world"
 shape <-
   world(
     resolution = resolution,
-    version = version,
-    path = raw_data_dir
+    level = level,
+    path = raw_data_dir,
+    version = version
   ) |>
   st_as_sf()
 ```
@@ -134,6 +139,9 @@ pattern <- paste0(
   "-",
   "resolution-",
   resolution,
+  "-",
+  "level-",
+  level,
   "-",
   "version-",
   version,

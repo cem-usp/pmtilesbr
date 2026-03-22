@@ -13,15 +13,20 @@ This repository hosts [PMTiles](https://docs.protomaps.com/pmtilesbr/) files for
 
 [PMTiles](https://docs.protomaps.com/pmtilesbr/) is a format for storing and serving tiled geospatial data. It is designed to be efficient, scalable, and easy to use, making it ideal for web applications and data visualization.
 
-We plan to move these files to a more permanent hosting solution in the future, but for now, they are available here for public use.
+We plan to move these files to a more permanent hosting solution in the future.
+
+## Why Use PMTiles?
+
+When working with complex geometries in web mapping applications like [Mapbox](https://www.mapbox.com/), [MapLibre](https://maplibre.org/), and [Leaflet](https://leafletjs.com/), performance can become a real problem. Shapes with many vertices make rendering slow, bloat file sizes, and generally make life harder. PMTiles addresses this by letting you serve precompiled tiles directly from the web, rather than bundling them into your application.
 
 ## Usage
 
-Tiles are available in the [`pmtiles`](pmtiles) directory and are hosted at [cem-usp.github.io/pmtilesbr](https://cem-usp.github.io/pmtilesbr/). For descriptions and metadata for each file, visit the project site: <https://cem-usp.github.io/pmtilesbr>
+Tiles are available in the [`pmtiles`](pmtiles) directory and are hosted at [cem-usp.github.io/pmtilesbr](https://cem-usp.github.io/pmtilesbr/). For descriptions and metadata for each file, visit the project site.
 
 To load a file, pass its URL to your application. For example, using [R](https://www.r-project.org/):
 
 ```r
+library(geobr)
 library(magrittr)
 library(mapgl)
 library(pmtiles) # github.com/walkerke/pmtiles
@@ -31,7 +36,7 @@ library(pmtiles) # github.com/walkerke/pmtiles
 pmtiles_file <- file.path(
   "https://cem-usp.github.io/pmtilesbr",
   "pmtiles",
-  "geobr-2020-read_state-simplified-min-zoom-2-max-zoom-10.pmtiles"
+  "geobr-2024-read_municipality-simplified-min-zoom-2-max-zoom-10.pmtiles"
 )
 ```
 
@@ -56,17 +61,29 @@ pmtiles_bbox <-
   unlist()
 ```
 
-<!-- set.seed(1998) -->
+```r
+municipality_data <- read_municipality(
+  year = 2024,
+  simplified = TRUE,
+  showProgress = TRUE,
+  keep_areas_operacionais = FALSE
+)
+```
 
 ```r
+set.seed(1998)
+
 scale_fill_mapgl <- match_expr(
-  column = "code_state",
-  values = 11:53,
+  column = "code_muni",
+  values = municipality_data |>
+    extract2("code_muni"),
   stops = c("#db5025", "#070808", "#efd46a") |>
     sample(
-      length(11:53),
+      municipality_data |>
+        extract2("code_muni") |>
+        length(),
       replace = TRUE,
-      prob = c(7,1, 2)
+      prob = c(7, 1, 2)
     ),
   default = "#868489"
 )
@@ -74,28 +91,34 @@ scale_fill_mapgl <- match_expr(
 
 ```r
 pmtiles_bbox |>
-  maplibre(
+   maplibre(
     bounds = _,
-    projection = "mercator"
+    projection = "mercator",
   ) |>
   add_pmtiles_source(
-    id = "brazil_state_borders",
+    id = "municipality_borders",
     url = pmtiles_file,
     source_type = "vector"
   ) |>
   add_fill_layer(
-    id = "example",
-    source = "brazil_state_borders",
+    id = "screen_fill",
+    source = "municipality_borders",
     source_layer = pmtiles_layer,
-    fill_color = scale_fill_mapgl,
-    fill_outline_color = "white"
+    fill_color = scale_fill_mapgl
+  ) |>
+  add_line_layer(
+    id = "screen_outline",
+    source = "municipality_borders",
+    source_layer = pmtiles_layer,
+    line_color = "white",
+    line_width = 0.01
   )
 ```
 
-![Brazil State Boundaries](images/mapgl-brazil-states.png)
+![Brazil Municipality Boundaries](images/mapgl-brazil-municipalities.png)
 
 > [!TIP]
-> Use [pmtilesbr.io](https://pmtilesbr.io/#url=https%3A%2F%2Fcem-usp.github.io%2Fpmtiles%2Fpmtiles%2Fgeobr-2020-brazil-min-zoom-2-max-zoom-10-simplified.pmtilesbr&map=3.42/-16.49/-48.41) to easily see and inspect each PMTiles file before using.
+> Use [pmtilesbr.io](https://pmtiles.io/#url=https%3A%2F%2Fcem-usp.github.io%2Fpmtilesbr%2Fpmtiles%2Fgeobr-2024-read_municipality-simplified-min-zoom-2-max-zoom-10.pmtiles&map=3.87/-15.13/-51.42) to easily inspect each PMTiles file before using.
 
 ## Rendering
 
@@ -104,7 +127,7 @@ The files were processed using the [Quarto](https://quarto.org/) publishing syst
 After installing the dependencies mentioned above, follow these steps to render the tiles:
 
 1. **Clone** this repository to your local machine.
-2. **Open** the project in your preferred IDE.
+2. **Open** the project in your preferred [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment).
 3. **Install package dependencies** by running [`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html) in the R console. This will install all required software dependencies.
 4. **Open** the Quarto notebooks in the [`qmd`](qmd) directory and run the code as described .
 

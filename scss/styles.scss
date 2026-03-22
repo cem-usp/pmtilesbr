@@ -2,8 +2,8 @@
 
 $content-padding-top: 0.5rem;
 
-$callout-color-note: #b25544;
-$callout-color-tip: #b39a00;
+$callout-color-note: #070808;
+$callout-color-tip: #070808;
 $callout-color-caution: #070808;
 $callout-color-warning: #070808;
 $callout-color-important: #070808;
@@ -32,6 +32,16 @@ body {
   font-weight: bold;
 }
 
+/* Headings ----- */
+
+.first-h2 {
+  display: none;
+}
+
+h2, .h2 {
+	margin-top: 1rem !important;
+}
+
 /* Blockquote ----- */
 
 .blockquote {
@@ -39,6 +49,10 @@ body {
 }
 
 /* Callouts ----- */
+.callout {
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
 
 .callout:not(.callout-titled) .callout-body > :last-child,
 .callout:not(.callout-titled) .callout-body > div > :last-child {
@@ -96,8 +110,9 @@ figcaption, caption {
 
 /* Page Full Containers ----- */
 
-.cell.page-columns.page-full {
-	padding-bottom: 15px;
+.cell-output-display.column-screen {
+  padding-top: 1.75rem;
+	padding-bottom: 1rem;
 }
 
 /* Colors ----- */
