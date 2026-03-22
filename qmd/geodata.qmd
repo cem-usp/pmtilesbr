@@ -9,7 +9,7 @@ here("R", ".setup.R") |> source()
 
 ## Overview
 
-This document describes the data munging process used to create PMTiles files for data sourced from the [`geodata`](https://rspatial.github.io/geodata/) R package [@hijmansa].
+This document describes the data munging process used to create PMTiles files for data sourced from the [`geodata`](https://rspatial.github.io/geodata/) R package [@hijmans2024].
 
 ## Methods
 
@@ -18,7 +18,7 @@ This document describes the data munging process used to create PMTiles files fo
 The data used in this pipeline come from the following sources:
 
 - [GADM](https://gadm.org/): Database of Global Administrative Areas
-  - Data on administrative boundaries and regions, sourced via the [`geodata`](https://rspatial.github.io/geodata/) R package [@hijmansa].
+  - Data on administrative boundaries and regions, sourced via the [`geodata`](https://rspatial.github.io/geodata/) R package [@hijmans2024].
 
 ### Data Munging
 

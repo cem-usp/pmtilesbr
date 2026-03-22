@@ -9,15 +9,17 @@
 
 ## Overview
 
-This repository hosts [PMTiles](https://docs.protomaps.com/pmtilesbr/) files for spatial visualization and analysis in Brazil.
+This repository hosts [PMTiles](https://docs.protomaps.com/pmtiles/) files for spatial visualization and analysis in Brazil.
 
-[PMTiles](https://docs.protomaps.com/pmtilesbr/) is a format for storing and serving tiled geospatial data. It is designed to be efficient, scalable, and easy to use, making it ideal for web applications and data visualization.
+[PMTiles](https://docs.protomaps.com/pmtiles/) is a format for storing and serving tiled geospatial data. It is designed to be efficient, scalable, and easy to use, making it ideal for web applications and data visualization.
 
 We plan to move these files to a more permanent hosting solution in the future.
 
+> If you find this project useful, please consider giving it a star! &nbsp; [![GitHub Repository Stars](https://img.shields.io/github/stars/cem-usp/pmtilesbr)](https://github.com/cem-usp/pmtilesbr)
+
 ## Why Use PMTiles?
 
-When working with complex geometries in web mapping applications like [Mapbox](https://www.mapbox.com/), [MapLibre](https://maplibre.org/), and [Leaflet](https://leafletjs.com/), performance can become a real problem. Shapes with many vertices make rendering slow, bloat file sizes, and generally make life harder. PMTiles addresses this by letting you serve precompiled tiles directly from the web, rather than bundling them into your application.
+When working with complex geometries in web mapping applications like [Mapbox](https://www.mapbox.com/), [MapLibre](https://maplibre.org/), and [Leaflet](https://leafletjs.com/), performance can become [a real problem](https://walker-data.com/posts/pmtiles-texas-blocks/). Shapes with many vertices make rendering slow, bloat file sizes, and generally make life harder. [PMTiles](https://docs.protomaps.com/pmtiles/) addresses this by letting you serve precompiled tiles directly from the web, rather than bundling them into your application.
 
 ## Usage
 
@@ -131,6 +133,14 @@ After installing the dependencies mentioned above, follow these steps to render 
 3. **Install package dependencies** by running [`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html) in the R console. This will install all required software dependencies.
 4. **Open** the Quarto notebooks in the [`qmd`](qmd) directory and run the code as described .
 
+## Contributing
+
+[![](https://img.shields.io/badge/Contributor%20Covenant-3.0-4baaaa.svg)](https://www.contributor-covenant.org/version/3/0/code_of_conduct/)
+
+Contributions are always welcome! Whether you want to report bugs, suggest new features, or help improve the code or documentation, your input makes a difference.
+
+Before opening a new issue, please check the [issues tab](https://github.com/cem-usp/pmtilesbr/issues) to see if your topic has already been reported.
+
 ## Citation
 
 > [!NOTE]
@@ -179,14 +189,6 @@ PARTICULAR PURPOSE. See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 ```
-
-## Contributing
-
-[![](https://img.shields.io/badge/Contributor%20Covenant-3.0-4baaaa.svg)](https://www.contributor-covenant.org/version/3/0/code_of_conduct/)
-
-Contributions are always welcome! Whether you want to report bugs, suggest new features, or help improve the code or documentation, your input makes a difference.
-
-Before opening a new issue, please check the [issues tab](https://github.com/cem-usp/pmtilesbr/issues) to see if your topic has already been reported.
 
 ## Acknowledgments
 

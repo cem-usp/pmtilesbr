@@ -2,7 +2,7 @@ meta:
   name: PMTilesBR
   link:
     home: https://cem-usp.github.io/pmtilesbr/
-    github: https://github.com/cem-usp/PMTilesBR
+    github: https://github.com/cem-usp/pmtilesbr
   description: |
     Geospatial tiled datasets for spatial visualization and analysis in Brazil.
 
@@ -15,8 +15,8 @@ color:
     yellow: "#efd46a"
     yellow-d25: "#b39a00" # colorspace::darken("#efd46a", 0.25)
     yellow-d50: "#756400" # colorspace::darken("#efd46a", 0.50)
-    white: "#ffffff"
     black: "#070808"
+    white: "#ffffff"
     gray: "#868489"
     gray-l50: "#c1bfc4" # colorspace::lighten("#868489", 0.50)
     gray-l75: "#b9b9b9"
@@ -26,8 +26,8 @@ color:
   primary: red
   secondary: black
   tertiary: yellow
-  success: red
-  info: red
+  success: black
+  info: black
   warning: black
   danger: black
   light: white
