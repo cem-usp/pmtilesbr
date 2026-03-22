@@ -167,6 +167,13 @@ file <- file.path(
 ```
 
 ```{r}
+#| include: false
+#| eval: false
+
+pm_show(file, tilejson = TRUE)
+```
+
+```{r}
 #| echo: false
 
 file |>
@@ -205,6 +212,13 @@ file <- file.path(
   "pmtiles",
   "geobr-2020-read_region-simplified-min-zoom-2-max-zoom-10.pmtiles"
 )
+```
+
+```{r}
+#| include: false
+#| eval: false
+
+pm_show(file, tilejson = TRUE)
 ```
 
 ```{r}
@@ -273,6 +287,13 @@ file <- file.path(
 
 ```{r}
 #| include: false
+#| eval: false
+
+pm_show(file, tilejson = TRUE)
+```
+
+```{r}
+#| include: false
 
 state_data <- read_state(
   year = 2020,
@@ -333,6 +354,13 @@ file <- file.path(
   "pmtiles",
   "geobr-2024-read_municipality-simplified-min-zoom-2-max-zoom-10.pmtiles"
 )
+```
+
+```{r}
+#| include: false
+#| eval: false
+
+pm_show(file, tilejson = TRUE)
 ```
 
 ```{r}
@@ -403,6 +431,13 @@ file <- file.path(
     "min-zoom-0-max-zoom-6.pmtiles"
   )
 )
+```
+
+```{r}
+#| include: false
+#| eval: false
+
+pm_show(file, tilejson = TRUE)
 ```
 
 ```{r}
