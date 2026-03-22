@@ -231,7 +231,7 @@ file |>
     column = "code_region",
     values = region_data |>
       extract2("code_region"),
-    tooltip = "name_region",
+    tooltip = "name_region_en",
     hover_options = list(
       fill_color = get_brand_color("gray-l50"),
       fill_opacity = 1
