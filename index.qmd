@@ -386,8 +386,8 @@ Sourced from the [`geodata`](https://rspatial.github.io/geodata/) R package [@hi
 
 #### Files
 
-- [`gadm-world-resolution-5-level-0-version-latest-2026-min-zoom-0-max-zoom-6.pmtiles`](pmtiles/gadm-world-resolution-5-level-0-version-latest-2026-min-zoom-0-max-zoom-6.pmtiles)
-- [`gadm-world-resolution-5-level-0-version-latest-2026-min-zoom-0-max-zoom-10.pmtiles`](pmtiles/gadm-world-resolution-5-level-0-version-latest-2026-min-zoom-0-max-zoom-10.pmtiles)
+- [`gadm-world-resolution-5-level-0-version-latest-min-zoom-0-max-zoom-6.pmtiles`](pmtiles/gadm-world-resolution-5-level-0-version-latest-min-zoom-0-max-zoom-6.pmtiles)
+- [`gadm-world-resolution-5-level-0-version-latest-min-zoom-0-max-zoom-10.pmtiles`](pmtiles/gadm-world-resolution-5-level-0-version-latest-min-zoom-0-max-zoom-10.pmtiles)
 
 #### View
 
@@ -399,7 +399,7 @@ file <- file.path(
   "https://cem-usp.github.io/pmtilesbr",
   "pmtiles",
   paste0(
-    "gadm-world-resolution-5-level-0-version-latest-2026-",
+    "gadm-world-resolution-5-level-0-version-latest-",
     "min-zoom-0-max-zoom-6.pmtiles"
   )
 )
@@ -432,14 +432,14 @@ file |>
     column = "GID_0",
     values = world_data |>
       extract2("GID_0"),
-    bounds = c(-180, -75, 180, 90),
+    bounds = c(-175, -75, 180, 85),
     tooltip = "NAME_0",
     hover_options = list(
       fill_color = get_brand_color("gray-l50"),
       fill_opacity = 1
     ),
     line_width = 0.5,
-    seed = 1998
+    seed = 2025
   )
 ```
 

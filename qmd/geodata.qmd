@@ -78,10 +78,6 @@ for (i in c(data_dir, raw_data_dir)) {
 ### Set Initial Variables
 
 ```{r}
-year <- Sys.Date() |> format("%Y") |> as.integer()
-```
-
-```{r}
 resolution <- 5
 ```
 
@@ -145,8 +141,6 @@ pattern <- paste0(
   "-",
   "version-",
   version,
-  "-",
-  year,
   "-",
   "min-zoom-",
   min_zoom,
