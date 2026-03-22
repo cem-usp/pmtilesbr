@@ -11,11 +11,15 @@ project:
   post-render: "R/.post-render.R"
 
 title: "PMTilesBR"
+author: "Daniel Vartanian, Camila N.Fernandes, & Mariana Giannotti"
+description: "Geospatial tiled datasets for spatial visualization and analysis in Brazil."
 keyword: >
   PMTiles, Vector Tiles, Raster Tiles, Tiled Data, Spatial Data, Data Science,
   Spatial Data Science, Geospatial Data Science, Spatial Visualization, Data
   Visualization, GIS, Open Data, Open Science, Reproducible Research,
   Tippecanoe, R Programming, Brazil
+date: today
+date-format: long
 
 website:
   favicon: images/logo.svg
@@ -56,12 +60,7 @@ format:
     link-external-newwindow: true
     csl: csl/english-apa-author-date.csl
     theme: [cosmo, scss/styles.scss, brand]
-    include-in-header:
-      text: |
-        <meta property="og:description" content="Geospatial tiled datasets for spatial visualization and analysis in Brazil.">
-        <meta property="og:image" content="https://cem-usp.github.io/pmtilesbr/images/og-image.png">
-        <meta property="og:image:height" content="2400">
-        <meta property="og:image:width" content="1600">
+    include-in-header: "html/include-in-header.html"
 
 google-scholar: true
 bibliography: references.bib

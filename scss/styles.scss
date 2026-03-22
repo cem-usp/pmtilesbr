@@ -16,6 +16,16 @@ body {
   color: $brand-black;
 }
 
+/* Title ----- */
+
+.description {
+	display: none !important;
+}
+
+.quarto-title-meta {
+	display: none !important;
+}
+
 /* Navigation ----- */
 
 .bi-github {
