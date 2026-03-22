@@ -117,7 +117,7 @@ pmtiles_bbox |>
   )
 ```
 
-![Brazil Municipality Boundaries](images/mapgl-brazil-municipalities.png)
+[![Brazil Municipality Boundaries](images/mapgl-brazil-municipalities.png)](https://cem-usp.github.io/pmtilesbr/)
 
 > [!TIP]
 > Use [pmtilesbr.io](https://pmtiles.io/#url=https%3A%2F%2Fcem-usp.github.io%2Fpmtilesbr%2Fpmtiles%2Fgeobr-2024-read_municipality-simplified-min-zoom-2-max-zoom-10.pmtiles&map=3.87/-15.13/-51.42) to easily inspect each PMTiles file before using.
