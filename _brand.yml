@@ -1,90 +1,62 @@
 meta:
-  name: Center for Metropolitan Studies
+  name: PMTilesBR
   link:
-    home: https://centrodametropole.fflch.usp.br
-    github: https://github.com/cem-usp
-    instagram: https://www.instagram.com/centrodametropole
-    x: https://x.com/CEM_CMS
-    facebook: https://www.facebook.com/CemCepid
-    youtube: https://www.youtube.com/@CentrodeEstudosdaMetropole
-    linkedin: https://www.linkedin.com/company/centro-de-estudos-da-metropole
+    home: https://cem-usp.github.io/pmtilesbr/
+    github: https://github.com/cem-usp/PMTilesBR
   description: |
-    The Center for Metropolitan Studies (CEM_ is one of the Research,
-    Innovation, and Dissemination Centers (CEPIDs) of the São Paulo Research
-    Foundation (FAPESP). It is based at the School of Philosophy, Letters and
-    Human Sciences (FFLCH) of the University of São Paulo (USP) and at the
-    Brazilian Center for Analysis and Planning (CEBRAP).
-  founded: 2000
+    Geospatial tiled datasets for spatial visualization and analysis in Brazil.
 
 color:
   palette:
-    blue: "#014691"
-    gray: "#868489"
+    red: "#db5025"
+    red-d10: "#b25544" # colorspace::darken("#db5025", 0.1)
+    red-d25: "#994331" # colorspace::darken("#db5025", 0.25)
+    red-d50: "#702611" # colorspace::darken("#db5025", 0.50)
+    yellow: "#efd46a"
+    yellow-d25: "#b39a00" # colorspace::darken("#efd46a", 0.25)
+    yellow-d50: "#756400" # colorspace::darken("#efd46a", 0.50)
     white: "#ffffff"
-    black: "#141414"
-    mono-blue-1: "#14273a" # https://color.adobe.com/create/color-wheel
-    mono-blue-2: "#123b64"
-    mono-blue-3: "#01478f"
-    mono-blue-4: "#82c1ff"
-    mono-blue-5: "#add6ff"
-    mono-blue-6: "#d7ebff"
-    comp-blue-1: "#8f5a01" # https://color.adobe.com/create/color-wheel
-    comp-blue-2: "#123b64"
-    comp-blue-3: "#01488f"
-    comp-blue-4: "#5c4113"
-    comp-blue-5: "#14273a"
-    comp-blue-6: "#f5bf64"
-    triad-blue-olive: "#7f9101" # https://color.adobe.com/create/color-wheel
-    triad-blue-red: "#910c01"
-    triad-blue-blue: "#014791"
-    square-blue-green: "#1d8f01" # https://color.adobe.com/create/color-wheel
-    square-blue-orange: "#8f5a01"
-    square-blue-blue: "#01488f"
-    square-blue-purple: "#8f0170"
-    blue-d50: "#002554" # colorspace::darken("#014691", 0.50)
-    blue-l25: "#4f70b7"
+    black: "#070808"
+    gray: "#868489"
     gray-l50: "#c1bfc4" # colorspace::lighten("#868489", 0.50)
     gray-l75: "#b9b9b9"
     gray-l90: "#e2e2e2"
     gray-l95: "#f1f1f1"
   background: white
-  primary: blue
-  secondary: gray
-  tertiary: black
-  success: square-blue-green
-  info: square-blue-blue
-  warning: square-blue-orange
-  danger: triad-blue-red
+  primary: red
+  secondary: black
+  tertiary: yellow
+  success: red
+  info: red
+  warning: black
+  danger: black
   light: white
   dark: black
 
 typography:
   fonts:
-    - family: Montserrat
+    - family: Nunito Sans
       source: google
       weight: [100, 200, 300, 400, 500, 600, 700, 800, 900]
-    - family: Roboto
-      source: google
-      weight: [100, 200, 300, 400, 500, 600, 700, 800, 900]
-    - family: Roboto Mono
+    - family: Space Mono
       source: google
       weight: [100, 200, 300, 400, 500, 600, 700]
   base:
-    family: Roboto
+    family: Nunito Sans
     size: 1rem
     line-height: 1.5
     weight: normal
   headings:
-    family: Montserrat
-    color: blue
+    family: Nunito Sans
+    color: red-d25
     line-height: 1.5
-    weight: 800
-  monospace: Roboto Mono
+    weight: 900
+  monospace: Space Mono
   monospace-inline:
     color: black
     background-color: gray-l95
   monospace-block:
     background-color: gray-l95
   link:
-    color: comp-blue-1
+    color: yellow-d25
     decoration: none

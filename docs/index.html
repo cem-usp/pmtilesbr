@@ -1,13 +1,9 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US"><head>
-
-<meta charset="utf-8">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta charset="UTF-8">
 <meta name="generator" content="quarto-1.8.27">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
-<title>PMTiles</title>
+<title>PMTilesBR</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,16 +16,67 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
-
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
 <link href="./images/favicon.svg" rel="icon" type="image/svg+xml">
+<script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -37,27 +84,14 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-3c2874bcb47fcac49e0bf0af066f625e.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-1a0c994539ae3df13c4b426f086ca321.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-3c2874bcb47fcac49e0bf0af066f625e.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-6ebf1c17ee52d4a41d24e1b861b6ca7f.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-9f790322540bfaeee81c3744168ecf0e.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-6ebf1c17ee52d4a41d24e1b861b6ca7f.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-947f6f62194c8ffa26b9920ffd30be7c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-082033e76f3d517b0005c81c8595e722.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-947f6f62194c8ffa26b9920ffd30be7c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
-  "location": "sidebar",
-  "copy-button": false,
-  "collapse-after": 3,
-  "panel-placement": "start",
-  "type": "textbox",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
-  "show-item-context": false,
+<link href="site_libs/bootstrap/bootstrap-0d9958c3282d917ed745a8317d7b2b78.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-d7a637c0abd67513a13cfd2258c56698.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-0d9958c3282d917ed745a8317d7b2b78.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -71,31 +105,72 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script>
-<meta property="og:description" content="">
-<meta property="og:image" content="https://cem-usp.github.io/pmtiles/images/og-image.png">
+}</script><script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script><link href="site_libs/maplibre-gl-5.19.0/maplibre-gl.css" rel="stylesheet">
+<script src="site_libs/maplibre-gl-5.19.0/maplibre-gl.js"></script><link href="site_libs/mapbox-gl-draw-1.5.0/mapbox-gl-draw.css" rel="stylesheet">
+<script src="site_libs/mapbox-gl-draw-1.5.0/mapbox-gl-draw.js"></script><script src="site_libs/freehand-mode-1.0.0/freehand-mode.js"></script><script src="site_libs/rectangle-mode-1.0.0/rectangle-mode.js"></script><script src="site_libs/radius-mode-1.0.0/radius-mode.js"></script><link href="site_libs/maplibre-gl-geocoder-1.5.0/maplibre-gl-geocoder.css" rel="stylesheet">
+<script src="site_libs/maplibre-gl-geocoder-1.5.0/maplibre-gl-geocoder.min.js"></script><script src="site_libs/mapbox-gl-globe-minimap-1.2.1/bundle.js"></script><script src="site_libs/pmtiles-4.4.0/pmtiles.js"></script><script src="site_libs/h3j-h3t-0.9.2/h3j_h3t.js"></script><link href="site_libs/maptiler-geocoding-control-2.1.7/style.css" rel="stylesheet">
+<script src="site_libs/maptiler-geocoding-control-2.1.7/maplibregl.umd.js"></script><script src="site_libs/turf-7.3.0/turf.min.js"></script><script src="site_libs/turf-operations-1.0.0/turf-operations.js"></script><script src="site_libs/html2canvas-1.4.1/html2canvas.min.js"></script><link href="site_libs/legend-interactivity-1.0.0/legend-interactivity.css" rel="stylesheet">
+<script src="site_libs/legend-interactivity-1.0.0/legend-interactivity.js"></script><script src="site_libs/maplibregl-binding-0.4.5/maplibregl.js"></script><link href="site_libs/layers-control-1.0.0/layers-control.css" rel="stylesheet">
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script><meta property="og:description" content="">
+<meta property="og:image" content="https://cem-usp.github.io/pmtilesbr/images/og-image.png">
 <meta property="og:image:height" content="2400">
 <meta property="og:image:width" content="1600">
-
-
-<meta property="og:title" content="PMTiles">
-<meta property="og:description" content="This repository hosts PMTiles files to help with spatial visualization and analysis.">
+<meta property="og:title" content="PMTilesBR">
+<meta property="og:description" content="To cite this work, please use the following format:">
+<meta property="og:image" content="https://cem-usp.github.io/pmtilesbr/images/og-image.png">
+<meta property="og:image:alt" content="Center for Metropolitan Studies">
+<meta property="og:image:height" content="600">
+<meta property="og:image:width" content="900">
+<meta name="citation_title" content="PMTilesBR">
+<meta name="citation_fulltext_html_url" content="https://cem-usp.github.io/pmtilesbr/">
+<meta name="citation_language" content="en">
+<meta name="citation_reference" content="citation_title=Quarto;,citation_abstract=Quarto is an open-source scientific and technical publishing system built on Pandoc.;,citation_author=J. J. Allaire;,citation_author=Charles Teague;,citation_author=Yihui Xie;,citation_author=Christophe Dervieux;,citation_doi=10.5281/ZENODO.5960048;,citation_publisher=Zenodo;">
+<meta name="citation_reference" content="citation_title=GADM: Database of global administrative areas;,citation_abstract=GADM wants to map the administrative areas of all countries, at all levels of sub-division. We provide data at high spatial resolutions that includes an extensive set of attributes. This is a never ending project, but we are happy to share what we have.;,citation_author=Robert J. Hijmans;,citation_fulltext_html_url=https://gadm.org;,citation_language=en-US;">
+<meta name="citation_reference" content="citation_title=geobr: Download official spatial data sets of Brazil;,citation_abstract=geobr is a computational package to download official spatial data sets of Brazil. The package includes a wide range of geospatial data in geopackage format (like shapefiles but better), available at various geographic scales and for various years with harmonized attributes, projection and topology.;,citation_author=Rafael H. M. Pereira;,citation_author=Caio Nogueira Goncalves;,citation_doi=10.32614/CRAN.package.geobr;">
+<meta name="citation_reference" content="citation_title=R: A language and environment for statistical computing;,citation_author=R Core Team;,citation_fulltext_html_url=https://www.r-project.org;,citation_publisher=R Foundation for Statistical Computing;">
+<meta name="citation_reference" content="citation_title=renv: Project environments;,citation_abstract=A dependency management toolkit for R. Using ’renv’, you can create and manage project-local R libraries, save the state of these libraries to a ’lockfile’, and later restore your library as required. Together, these tools can help make your projects more isolated, portable, and reproducible.;,citation_author=Kevin Ushey;,citation_author=Hadley Wickham;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_doi=10.32614/CRAN.package.renv;">
+<meta name="citation_reference" content="citation_title=The tidy tools manifesto;,citation_abstract=tidyverse;,citation_author=Hadley Wickham;,citation_publication_date=2023;,citation_cover_date=2023;,citation_year=2023;,citation_fulltext_html_url=https://tidyverse.tidyverse.org/articles/manifesto.html;,citation_language=en-US;,citation_publisher=Tidyverse;">
+<meta name="citation_reference" content="citation_title=R for data science: Import, tidy, transform, visualize, and model data;,citation_abstract=Use R to turn data into insight, knowledge, and understanding. With this practical book, aspiring data scientists will learn how to do data science with R and RStudio, along with the tidyverse collection of R packages designed to work together to make data science fast, fluent, and fun. Even if you have no programming experience, this updated edition will have you doing data science quickly. You’ll learn how to import, transform, and visualize your data and communicate the results. And you’ll get a complete, big-picture understanding of the data science cycle and the basic tools you need to manage the details. Updated for the latest tidyverse features and best practices, new chapters show you how to get data from spreadsheets, databases, and websites. Exercises help you practice what you’ve learned along the way.;,citation_author=Hadley Wickham;,citation_author=Mine Çetinkaya-Rundel;,citation_author=Garrett Grolemund;,citation_publication_date=2023;,citation_cover_date=2023;,citation_year=2023;,citation_fulltext_html_url=https://r4ds.hadley.nz;,citation_isbn=978-1-4920-9740-2;,citation_language=en-US;">
+<meta name="citation_reference" content="citation_title=The tidyverse style guide;,citation_author=Hadley Wickham;,citation_fulltext_html_url=https://style.tidyverse.org;,citation_language=en-US;">
+<meta name="citation_reference" content="citation_title=Tidy design principles;,citation_author=Hadley Wickham;,citation_fulltext_html_url=https://design.tidyverse.org;,citation_language=en-US;">
 </head>
-
-<body class="fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/cem-usp/pmtilesbr/"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+</div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
+   
+  <ul>
+<li><a href="#files" id="toc-files" class="nav-link active" data-scroll-target="#files">Files</a></li>
+  <li><a href="#citation" id="toc-citation" class="nav-link" data-scroll-target="#citation">Citation</a></li>
+  <li><a href="#license" id="toc-license" class="nav-link" data-scroll-target="#license">License</a></li>
+  <li><a href="#acknowledgments" id="toc-acknowledgments" class="nav-link" data-scroll-target="#acknowledgments">Acknowledgments</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/cem-usp/pmtilesbr/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/cem-usp/pmtilesbr/blob/main/index.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/cem-usp/pmtilesbr/issues/" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">PMTiles</h1>
+<main class="content page-columns page-full" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title">PMTilesBR</h1>
 </div>
 
 
@@ -109,66 +184,232 @@ ul.task-list li input[type="checkbox"] {
   
 
 
-</header>
+</header><div style="display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start;">
+<div>
+<p>This website hosts <a href="https://docs.protomaps.com/pmtilesbr/">PMTiles</a> files for spatial visualization and analysis in Brazil.</p>
+<p><a href="https://docs.protomaps.com/pmtilesbr/">PMTiles</a> is a format for storing and serving tiled geospatial data. It is designed to be efficient, scalable, and easy to use, making it ideal for web applications and data visualization.</p>
+<p>We plan to move these files to a more permanent hosting solution in the future, but for now, they are available here for public use.</p>
+</div>
+<div style="margin-top: -1rem;">
+<p><img src="images/logo.png" class="img-fluid" width="120"></p>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Brazil municipality boundaries as PMTiles, sourced from the <a href="https://ipeagit.github.io/geobr/"><code>geobr</code></a> R package <span class="citation" data-cites="pereirab">(<a href="#ref-pereirab" role="doc-biblioref">Pereira &amp; Goncalves, n.d.</a>)</span>.</p>
+</div>
+</div>
+</div>
+<div class="cell column-screen">
 
-
-<p>This repository hosts <a href="https://docs.protomaps.com/pmtiles/">PMTiles</a> files to help with spatial visualization and analysis.</p>
-<section id="files" class="level2">
-<h2 class="anchored" data-anchor-id="files">Files</h2>
-<ul>
-<li>World
+</div>
+<div class="cell page-columns page-full">
+<div class="cell-output-display column-screen">
+<div id="htmlwidget-cb23bd4f57f34c6b9879" style="width:100%;height:480px;" class="maplibregl html-widget"></div>
+<script type="application/json" data-for="htmlwidget-cb23bd4f57f34c6b9879">{"x":{"style":"https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json","center":[0,0],"zoom":0,"bearing":0,"pitch":0,"projection":"mercator","additional_params":{"scrollZoom":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<section id="files" class="level2"><h2 class="anchored" data-anchor-id="files">Files</h2>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>See the code repository <a href="https://github.com/cem-usp/pmtilesbr#pmtilesbr">README</a> to learn more about how the files were created.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-tip">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Unless you really need to, use the simplified versions of the files, which are smaller and faster to load. The non-simplified versions are available for those who need the highest level of detail, but they may not be necessary for most applications.</p>
+</div>
+</div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href=""><code>geobr::read_country()</code></a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href=""><code>geobr::read_region()</code></a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href=""><code>geobr::read_state()</code></a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href=""><code>geobr::read_municipality()</code></a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href=""><code>geodata::world()</code></a></li>
+</ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>Sourced from the <a href="https://ipeagit.github.io/geobr/"><code>geobr</code></a> R package <span class="citation" data-cites="pereirab">(<a href="#ref-pereirab" role="doc-biblioref">Pereira &amp; Goncalves, n.d.</a>)</span>.</p>
+<section id="parameters" class="level4"><h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
 <ul>
 <li>Year: 2020</li>
-<li>Layer: <code>world</code></li>
-<li>Resolution: 5</li>
-<li>Version: latest</li>
+<li>Layer: <code>"read_country"</code>
+</li>
+<li>Simplified: <code>TRUE</code>/<code>FALSE</code>
+</li>
 <li>Minimum Zoom: 2</li>
 <li>Maximum Zoom: 10</li>
-<li>File: <a href="pmtiles/gadm-2026-world-resolution-5-version-latest-min-zoom-2-max-zoom-10.pmtiles"><code>gadm-2026-world-resolution-5-version-latest-min-zoom-2-max-zoom-10.pmtiles</code></a></li>
-</ul></li>
-<li>Brazil
+</ul></section><section id="files-1" class="level4"><h4 class="anchored" data-anchor-id="files-1">Files</h4>
+<ul>
+<li><a href="pmtiles/geobr-2020-read_country-min-zoom-2-max-zoom-10.pmtiles"><code>geobr-2020-read_country-min-zoom-2-max-zoom-10.pmtiles</code></a></li>
+<li><a href="pmtiles/geobr-2020-read_country-simplified-min-zoom-2-max-zoom-10.pmtiles"><code>geobr-2020-read_country-simplified-min-zoom-2-max-zoom-10.pmtiles</code></a></li>
+</ul></section><section id="view" class="level4"><h4 class="anchored" data-anchor-id="view">View</h4>
+</section>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Sourced from the <a href="https://ipeagit.github.io/geobr/"><code>geobr</code></a> R package <span class="citation" data-cites="pereirab">(<a href="#ref-pereirab" role="doc-biblioref">Pereira &amp; Goncalves, n.d.</a>)</span>.</p>
+<section id="parameters-1" class="level4"><h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
 <ul>
 <li>Year: 2020</li>
-<li>Layer: <code>brazil</code></li>
+<li>Layer: <code>"read_region"</code>
+</li>
+<li>Simplified: <code>TRUE</code>/<code>FALSE</code>
+</li>
 <li>Minimum Zoom: 2</li>
 <li>Maximum Zoom: 10</li>
-<li>Simplified: TRUE</li>
-<li>File: <a href="pmtiles/geobr-2020-brazil-min-zoom-2-max-zoom-10-simplified.pmtiles"><code>geobr-2020-brazil-min-zoom-2-max-zoom-10-simplified.pmtiles</code></a></li>
-</ul></li>
-<li>Brazil Regions
+</ul></section><section id="files-2" class="level4"><h4 class="anchored" data-anchor-id="files-2">Files</h4>
+<ul>
+<li><a href="pmtiles/geobr-2020-read_region-min-zoom-2-max-zoom-10.pmtiles"><code>geobr-2020-read_region-min-zoom-2-max-zoom-10.pmtiles</code></a></li>
+<li><a href="pmtiles/geobr-2020-read_region-simplified-min-zoom-2-max-zoom-10.pmtiles"><code>geobr-2020-read_region-simplified-min-zoom-2-max-zoom-10.pmtiles</code></a></li>
+</ul></section><section id="view-1" class="level4"><h4 class="anchored" data-anchor-id="view-1">View</h4>
+</section>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p>Sourced from the <a href="https://ipeagit.github.io/geobr/"><code>geobr</code></a> R package <span class="citation" data-cites="pereirab">(<a href="#ref-pereirab" role="doc-biblioref">Pereira &amp; Goncalves, n.d.</a>)</span>.</p>
+<section id="parameters-2" class="level4"><h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
 <ul>
 <li>Year: 2020</li>
-<li>Layer: <code>brazil-regions</code></li>
+<li>Layer: <code>"read_state"</code>
+</li>
+<li>Simplified: <code>TRUE</code>/<code>FALSE</code>
+</li>
 <li>Minimum Zoom: 2</li>
 <li>Maximum Zoom: 10</li>
-<li>Simplified: TRUE</li>
-<li>File: <a href="pmtiles/geobr-2020-brazil-regions-min-zoom-2-max-zoom-10-simplified.pmtiles"><code>geobr-2020-brazil-regions-min-zoom-2-max-zoom-10-simplified.pmtiles</code></a></li>
-</ul></li>
-<li>Brazil States
+</ul></section><section id="files-3" class="level4"><h4 class="anchored" data-anchor-id="files-3">Files</h4>
 <ul>
-<li>Year: 2020</li>
-<li>Layer: <code>brazil-states</code></li>
-<li>Minimum Zoom: 2</li>
-<li>Maximum Zoom: 10</li>
-<li>Simplified: TRUE</li>
-<li>File: <a href="pmtiles/geobr-2020-brazil-states-min-zoom-2-max-zoom-10-simplified.pmtiles"><code>geobr-2020-brazil-states-min-zoom-2-max-zoom-10-simplified.pmtiles</code></a></li>
-</ul></li>
-<li>Brazil Municipalities
+<li><a href="pmtiles/geobr-2020-read_state-min-zoom-2-max-zoom-10.pmtiles"><code>geobr-2020-read_state-min-zoom-2-max-zoom-10.pmtiles</code></a></li>
+<li><a href="pmtiles/geobr-2020-read_state-simplified-min-zoom-2-max-zoom-10.pmtiles"><code>geobr-2020-read_state-simplified-min-zoom-2-max-zoom-10.pmtiles</code></a></li>
+</ul></section>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<p>Sourced from the <a href="https://ipeagit.github.io/geobr/"><code>geobr</code></a> R package <span class="citation" data-cites="pereirab">(<a href="#ref-pereirab" role="doc-biblioref">Pereira &amp; Goncalves, n.d.</a>)</span>.</p>
+<section id="parameters-3" class="level4"><h4 class="anchored" data-anchor-id="parameters-3">Parameters</h4>
 <ul>
 <li>Year: 2024</li>
-<li>Layer: <code>brazil-municipalities</code></li>
+<li>Layer: <code>"read_municipality"</code>
+</li>
+<li>Simplified: <code>TRUE</code>/<code>FALSE</code>
+</li>
 <li>Minimum Zoom: 2</li>
 <li>Maximum Zoom: 10</li>
-<li>Simplified: TRUE</li>
-<li>File: <a href="pmtiles/geobr-2024-brazil-municipalities-min-zoom-2-max-zoom-10-simplified.pmtiles"><code>geobr-2024-brazil-municipalities-min-zoom-2-max-zoom-10-simplified.pmtiles</code></a></li>
-</ul></li>
-</ul>
-
-
+</ul></section><section id="files-4" class="level4"><h4 class="anchored" data-anchor-id="files-4">Files</h4>
+<ul>
+<li><a href="pmtiles/geobr-2024-read_municipality-min-zoom-2-max-zoom-10.pmtiles"><code>geobr-2024-read_municipality-min-zoom-2-max-zoom-10.pmtiles</code></a></li>
+<li><a href="pmtiles/geobr-2024-read_municipality-simplified-min-zoom-2-max-zoom-10.pmtiles"><code>geobr-2024-read_municipality-simplified-min-zoom-2-max-zoom-10.pmtiles</code></a></li>
+</ul></section><section id="view-2" class="level4"><h4 class="anchored" data-anchor-id="view-2">View</h4>
 </section>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<p>Sourced from the <a href="https://rspatial.github.io/geodata/"><code>geodata</code></a> R package <span class="citation" data-cites="hijmansa">(<a href="#ref-hijmansa" role="doc-biblioref">Hijmans, n.d.</a>)</span>.</p>
+<section id="parameters-4" class="level4"><h4 class="anchored" data-anchor-id="parameters-4">Parameters</h4>
+<ul>
+<li>Layer: <code>"world"</code>
+</li>
+<li>Resolution: 5</li>
+<li>Version: <code>"latest"</code> (created in 2026)</li>
+<li>Minimum Zoom: 2</li>
+<li>Maximum Zoom: 10</li>
+</ul></section><section id="files-5" class="level4"><h4 class="anchored" data-anchor-id="files-5">Files</h4>
+<ul>
+<li><a href="pmtiles/gadm-world-resolution-5-version-latest-2026-min-zoom-2-max-zoom-10.pmtiles"><code>gadm-world-resolution-5-version-latest-2026-min-zoom-2-max-zoom-10.pmtiles</code></a></li>
+</ul></section><section id="view-3" class="level4"><h4 class="anchored" data-anchor-id="view-3">View</h4>
+</section>
+</div>
+</div>
+</div>
+</section><section id="citation" class="level2"><h2 class="anchored" data-anchor-id="citation">Citation</h2>
+<div class="callout callout-style-simple callout-important">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>When using this data, you must also cite the original data sources.</p>
+</div>
+</div>
+</div>
+<p>To cite this work, please use the following format:</p>
+<p>Vartanian, D., Fernandes, C. N., &amp; Giannotti, M. A. (2026). <em>PMTilesBR: Tiled geospatial data for Brazil</em> [Computer software]. Center for Metropolitan Studies, University of São Paulo. <a href="https://cem-usp.github.io/pmtilesbr" class="uri">https://cem-usp.github.io/pmtilesbr</a></p>
+<p>A BibLaTeX entry for LaTeX users is:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>@software{vartanian2026,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  title = {PMTilesBR: Tiled geospatial data for Brazil},</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  author = {{Daniel Vartanian} and {Camila Nastari Fernandes} and {Mariana Abrantes Giannotti}},</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  year = {2026},</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  address = {São Paulo},</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  institution = {Center for Metropolitan Studies, University of São Paulo},</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  langid = {en},</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  url = {https://cem-usp.github.io/pmtilesbr}</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section><section id="license" class="level2"><h2 class="anchored" data-anchor-id="license">License</h2>
+<div style="text-align: left;">
+<p><a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/license-GPLv3-bd0000.svg" class="img-fluid" alt="License: GPLv3"></a> <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img src="https://img.shields.io/badge/license-CC_BY--NC--SA_4.0-lightgrey.svg" class="img-fluid" alt="License: CC BY-NC-SA 4.0"></a></p>
+</div>
+<div class="callout callout-style-simple callout-important">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>The original data sources may be subject to their own licensing terms and conditions.</p>
+</div>
+</div>
+</div>
+<p>The code in this repository is licensed under the <a href="https://www.gnu.org/licenses/gpl-3.0">GNU General Public License Version 3</a>, while the files are available under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International</a> license.</p>
+<pre><code>Copyright (C) 2026 Center for Metropolitan Studies
 
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+The code in this report is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</code></pre>
+</section><section id="acknowledgments" class="level2"><h2 class="anchored" data-anchor-id="acknowledgments">Acknowledgments</h2>
+<div class="columns" style="display: flex; align-items: center; margin: 1em; padding-top: 0em;">
+<div class="column" style="width: 30%; text-align: center;">
+<p><a href="https://centrodametropole.fflch.usp.br"><img src="images/cem-icon.svg" class="img-fluid" width="190"></a></p>
+</div><div class="column" style="width: 70%; display: flex; align-items: center;">
+<p>This work was developed with support from the Center for Metropolitan Studies (<a href="https://centrodametropole.fflch.usp.br">CEM</a>) based at the School of Philosophy, Letters and Human Sciences (<a href="https://www.fflch.usp.br/">FFLCH</a>) of the University of São Paulo (<a href="https://usp.br/">USP</a>) and at the Brazilian Center for Analysis and Planning (<a href="https://cebrap.org.br/">CEBRAP</a>).</p>
+</div>
+</div>
+<div class="columns" style="display: flex; align-items: center; margin: 1em; padding-top: 0em;">
+<div class="column" style="width: 30%; text-align: center;">
+<p><a href="https://fapesp.br/"><img src="images/fapesp-logo.svg" class="img-fluid" width="160"></a></p>
+</div><div class="column" style="width: 70%; display: flex; align-items: center;">
+<p>This study was financed, in part, by the São Paulo Research Foundation (<a href="https://fapesp.br/">FAPESP</a>), Brazil. Process Number <a href="https://bv.fapesp.br/en/bolsas/231507/geospatial-data-science-applied-to-food-policies/">2025/17879-2</a>.</p>
+</div>
+</div>
+</section><section id="references" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="references">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-hijmansa" class="csl-entry" role="listitem">
+Hijmans, R. J. (n.d.). <em><span>GADM</span>: <span>Database</span> of global administrative areas</em>. <a href="https://gadm.org">https://gadm.org</a>
+</div>
+<div id="ref-pereirab" class="csl-entry" role="listitem">
+Pereira, R. H. M., &amp; Goncalves, C. N. (n.d.). <em><span class="nocase">geobr</span>: <span>Download</span> official spatial data sets of <span>Brazil</span></em> [Computer software]. <a href="https://doi.org/10.32614/CRAN.package.geobr">https://doi.org/10.32614/CRAN.package.geobr</a>
+</div>
+</div>
+
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
     const anchorJS = new window.AnchorJS();
@@ -241,7 +482,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/cem-usp\.github\.io\/pmtiles\/");
+        var filterRegex = new RegExp("https:\/\/cem-usp\.github\.io\/pmtilesbr\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -577,5 +818,4 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/cem-usp/pmtiles/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/cem-usp/pmtiles/blob/main/index.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/cem-usp/pmtiles/issues/" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/cem-usp/pmtilesbr/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/cem-usp/pmtilesbr/blob/main/index.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/cem-usp/pmtilesbr/issues/" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

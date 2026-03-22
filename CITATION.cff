@@ -1,0 +1,71 @@
+cff-version: 1.2.0
+title: "PMTiles: Tiled Geospatial Data for Brazil"
+message: >-
+  If you use this software, please cite it using the metadata from this file.
+type: software
+authors:
+  - given-names: Daniel
+    family-names: Vartanian
+    email: danielvartan@proton.me
+    affiliation: University of São Paulo
+    orcid: "https://orcid.org/0000-0001-7782-759X"
+  - given-names: Camila
+    family-names: Nastari Fernandes
+    email: cnastari@usp.br
+    affiliation: University of São Paulo
+    orcid: "https://orcid.org/0000-0002-4430-604X"
+  - given-names: Mariana
+    family-names: Giannotti
+    email: mariana.giannotti@usp.br
+    affiliation: University of São Paulo
+    orcid: "https://orcid.org/0000-0001-7782-759X"
+abstract: >-
+  Geospatial tiled datasets for spatial visualization and analysis in Brazil.
+keywords:
+  - PMTiles
+  - Vector Tiles
+  - Raster Tiles
+  - Tiled Data
+  - Spatial Data
+  - Data Science
+  - Spatial Data Science
+  - Geospatial Data Science
+  - Spatial Visualization
+  - Data Visualization
+  - GIS
+  - Open Data
+  - Open Science
+  - Reproducible Research
+  - Tippecanoe
+  - R Programming
+  - Brazil
+preferred-citation:
+  type: software
+  title: "PMTiles: Tiled geospatial data for Brazil"
+  authors:
+  - given-names: Daniel
+    family-names: Vartanian
+    email: danielvartan@proton.me
+    affiliation: University of São Paulo
+    orcid: "https://orcid.org/0000-0001-7782-759X"
+  - given-names: Camila
+    family-names: Nastari Fernandes
+    email: cnastari@usp.br
+    affiliation: University of São Paulo
+    orcid: "https://orcid.org/0000-0002-4430-604X"
+  - given-names: Mariana
+    family-names: Giannotti
+    email: mariana.giannotti@usp.br
+    affiliation: University of São Paulo
+    orcid: "https://orcid.org/0000-0001-7782-759X"
+  url: https://cem-usp.github.io/pmtilesbr
+identifiers:
+  - type: url
+    value: https://github.com/cem-usp/pmtilesbr
+    description: GitHub Code Repository
+  - type: url
+    value: https://cem-usp.github.io/pmtilesbr
+    description: GitHub Pages Website
+repository-code: https://github.com/cem-usp/pmtilesbr
+license: GPL-3.0-or-later
+version: 0.1.0.9000

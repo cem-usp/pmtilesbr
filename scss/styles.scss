@@ -2,11 +2,11 @@
 
 $content-padding-top: 0.5rem;
 
-$callout-color-note: #014691;
-$callout-color-tip: #1d8f01;
-$callout-color-caution: #8f0170;
-$callout-color-warning: #8f5a01;
-$callout-color-important: #910c01;
+$callout-color-note: #b25544;
+$callout-color-tip: #b39a00;
+$callout-color-caution: #070808;
+$callout-color-warning: #070808;
+$callout-color-important: #070808;
 
 /*-- scss:rules --*/
 
@@ -94,34 +94,32 @@ figcaption, caption {
   pointer-events: auto;
 }
 
-/* Colors ----- */
+/* Page Full Containers ----- */
 
-.brand-blue {
-  color: $brand-blue;
+.cell.page-columns.page-full {
+	padding-bottom: 15px;
 }
 
-.brand-gray {
-  color: $brand-gray;
+/* Colors ----- */
+
+.brand-red {
+  color: $brand-red;
 }
 
 .brand-black {
   color: $brand-black;
 }
 
-.brand-comp-blue-1 {
-  color: $brand-comp-blue-1;
+.brand-yellow {
+  color: $brand-yellow;
 }
 
-.brand-triad-blue-red {
-  color: $brand-triad-blue-red;
+.brand-gray {
+  color: $brand-gray;
 }
 
-.brand-square-blue-green{
-  color: $brand-square-blue-green;
-}
-
-.brand-blue-l25 {
-  color: $brand-blue-l25;
+.brand-white {
+  color: $brand-white;
 }
 
 /* Others ----- */

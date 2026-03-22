@@ -1,4 +1,4 @@
-# pmtiles
+# PMTilesBR <a href = "https://github.com/cem-usp/pmtilesbr"><img src = "images/logo.svg" align="right" width="120" /></a>
 
 <!-- badges: start -->
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
@@ -9,33 +9,137 @@
 
 ## Overview
 
-This repository hosts [PMTiles](https://docs.protomaps.com/pmtiles/) files to help with spatial visualization and analysis.
+This repository hosts [PMTiles](https://docs.protomaps.com/pmtilesbr/) files for spatial visualization and analysis in Brazil.
+
+[PMTiles](https://docs.protomaps.com/pmtilesbr/) is a format for storing and serving tiled geospatial data. It is designed to be efficient, scalable, and easy to use, making it ideal for web applications and data visualization.
+
+We plan to move these files to a more permanent hosting solution in the future, but for now, they are available here for public use.
 
 ## Usage
 
-A list of files can be found in the [`pmtiles`](pmtiles) directory, all hosted at [cem-usp.github.io/pmtiles](https://cem-usp.github.io/pmtiles/).
+Tiles are available in the [`pmtiles`](pmtiles) directory and are hosted at [cem-usp.github.io/pmtilesbr](https://cem-usp.github.io/pmtilesbr/). For descriptions and metadata for each file, visit the project site: <https://cem-usp.github.io/pmtilesbr>
 
-To use a file, pass its URL directly to your application. Example:
+To load a file, pass its URL to your application. For example, using [R](https://www.r-project.org/):
 
-<https://cem-usp.github.io/pmtiles/pmtiles/geobr-2020-brazil-min-zoom-2-max-zoom-10-simplified.pmtiles>
+```r
+library(magrittr)
+library(mapgl)
+library(pmtiles) # github.com/walkerke/pmtiles
+```
+
+```r
+pmtiles_file <- file.path(
+  "https://cem-usp.github.io/pmtilesbr",
+  "pmtiles",
+  "geobr-2020-read_state-simplified-min-zoom-2-max-zoom-10.pmtiles"
+)
+```
+
+```r
+pmtiles_metadata <-
+  pmtiles_file |>
+  pm_show(tilejson = TRUE)
+```
+
+```r
+pmtiles_layer <-
+  pmtiles_metadata |>
+  extract2("vector_layers") |>
+  extract2(1) |>
+  extract2("id")
+```
+
+```r
+pmtiles_bbox <-
+  pmtiles_metadata |>
+  extract2("bounds") |>
+  unlist()
+```
+
+<!-- set.seed(1998) -->
+
+```r
+scale_fill_mapgl <- match_expr(
+  column = "code_state",
+  values = 11:53,
+  stops = c("#db5025", "#070808", "#efd46a") |>
+    sample(
+      length(11:53),
+      replace = TRUE,
+      prob = c(7,1, 2)
+    ),
+  default = "#868489"
+)
+```
+
+```r
+pmtiles_bbox |>
+  maplibre(
+    bounds = _,
+    projection = "mercator"
+  ) |>
+  add_pmtiles_source(
+    id = "brazil_state_borders",
+    url = pmtiles_file,
+    source_type = "vector"
+  ) |>
+  add_fill_layer(
+    id = "example",
+    source = "brazil_state_borders",
+    source_layer = pmtiles_layer,
+    fill_color = scale_fill_mapgl,
+    fill_outline_color = "white"
+  )
+```
+
+![Brazil State Boundaries](images/mapgl-brazil-states.png)
+
+> [!TIP]
+> Use [pmtilesbr.io](https://pmtilesbr.io/#url=https%3A%2F%2Fcem-usp.github.io%2Fpmtiles%2Fpmtiles%2Fgeobr-2020-brazil-min-zoom-2-max-zoom-10-simplified.pmtilesbr&map=3.42/-16.49/-48.41) to easily see and inspect each PMTiles file before using.
 
 ## Rendering
 
 The files were processed using the [Quarto](https://quarto.org/) publishing system, along with the [Tippecanoe](https://github.com/felt/tippecanoe) tool and the [R](https://www.r-project.org/) programming language. To ensure consistent results, the [`renv`](https://rstudio.github.io/renv/) package is used to manage and restore the R environment.
 
-After installing the dependencies mentioned above, follow these steps to reproduce the tiles:
+After installing the dependencies mentioned above, follow these steps to render the tiles:
 
 1. **Clone** this repository to your local machine.
 2. **Open** the project in your preferred IDE.
 3. **Install package dependencies** by running [`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html) in the R console. This will install all required software dependencies.
 4. **Open** the Quarto notebooks in the [`qmd`](qmd) directory and run the code as described .
 
+## Citation
+
+> [!NOTE]
+> When using this data, you must also cite the original data sources.
+
+To cite this work, please use the following format:
+
+Vartanian, D., Fernandes, C. N., & Giannotti, M. A. (2026). *PMTilesBR: Tiled geospatial data for Brazil* \[Computer software\]. Center for Metropolitan Studies, University of São Paulo. <https://cem-usp.github.io/pmtilesbr>
+
+A BibLaTeX entry for LaTeX users is:
+
+```latex
+@software{vartanian2026,
+  title = {PMTilesBR: Tiled geospatial data for Brazil},
+  author = {{Daniel Vartanian} and {Camila Nastari Fernandes} and {Mariana Abrantes Giannotti}},
+  year = {2026},
+  address = {São Paulo},
+  institution = {Center for Metropolitan Studies, University of São Paulo},
+  langid = {en},
+  url = {https://cem-usp.github.io/pmtilesbr}
+}
+```
+
 ## License
 
 [![License: GPLv3](https://img.shields.io/badge/license-GPLv3-bd0000.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/license-CC_BY--NC--SA_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
-The code in this repository is licensed under the [GNU General Public License Version 3](https://www.gnu.org/licenses/gpl-3.0), while the data is available under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
+> [!NOTE]
+> The original data sources may be subject to their own licensing terms and conditions.
+
+The code in this repository is licensed under the [GNU General Public License Version 3](https://www.gnu.org/licenses/gpl-3.0), while the files are available under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
 
 ```
 Copyright (C) 2026 Center for Metropolitan Studies
@@ -59,9 +163,20 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 Contributions are always welcome! Whether you want to report bugs, suggest new features, or help improve the code or documentation, your input makes a difference.
 
-Before opening a new issue, please check the [issues tab](https://github.com/cem-usp/pmtiles/issues) to see if your topic has already been reported.
+Before opening a new issue, please check the [issues tab](https://github.com/cem-usp/pmtilesbr/issues) to see if your topic has already been reported.
 
 ## Acknowledgments
+
+<table>
+  <tr>
+    <td width="30%" align="center" valign="center">
+        <a href="https://centrodametropole.fflch.usp.br"><img src="images/cem-icon.svg" width="190em"/></a>
+    </td>
+    <td width="70%" valign="center">
+      This work was developed with support from the Center for Metropolitan Studies (<a href="https://centrodametropole.fflch.usp.br">CEM</a>) based at the School of Philosophy, Letters and Human Sciences (<a href="https://www.fflch.usp.br/">FFLCH</a>) of the University of São Paulo (<a href="https://usp.br">USP</a>) and at the Brazilian Center for Analysis and Planning (<a href="https://cebrap.org.br/">CEBRAP</a>).
+    </td>
+  </tr>
+</table>
 
 <table>
   <tr>

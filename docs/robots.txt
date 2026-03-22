@@ -1,1 +1,1 @@
-Sitemap: https://cem-usp.github.io/pmtiles/sitemap.xml
+Sitemap: https://cem-usp.github.io/pmtilesbr/sitemap.xml

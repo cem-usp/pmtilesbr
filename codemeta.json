@@ -1,0 +1,107 @@
+{
+  "@context": "https://w3id.org/codemeta/3.0",
+  "@type": "SoftwareSourceCode",
+  "identifier": "pmtilesbr",
+  "dateCreated": "2026-03-21",
+  "applicationCategory": "Geospatial Data",
+  "applicationSubCategory": "PMTiles",
+  "name": "PMTiles: Tiled Geospatial Data for Brazil",
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Daniel",
+      "familyName": "Vartanian",
+      "email": "danielvartan@proton.me",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "University of São Paulo",
+        "url": "https://www.usp.br"
+      },
+      "@id": "https://orcid.org/0000-0001-7782-759X"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Camila",
+      "familyName": "Nastari Fernandes",
+      "email": "cnastari@usp.br",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "University of São Paulo",
+        "url": "https://www.usp.br"
+      },
+      "@id": "https://orcid.org/0000-0001-7782-759X"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Mariana",
+      "familyName": "Giannotti",
+      "email": "mariana.giannotti@usp.br",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "University of São Paulo",
+        "url": "https://www.usp.br"
+      },
+      "@id": "https://orcid.org/0000-0001-7782-759X"
+    }
+  ],
+  "provider": {
+    "@id": "cem-usp",
+    "@type": "Organization",
+    "name": "Center for Metropolitan Studies",
+    "url": "https://centrodametropole.fflch.usp.br"
+  },
+  "copyrightHolder": {
+    "@type": "Organization",
+    "name": "Center for Metropolitan Studies",
+    "url": "https://centrodametropole.fflch.usp.br"
+  },
+  "maintainer": {
+    "@type": "Person",
+    "familyName": "Vartanian",
+    "givenName": "Daniel",
+    "email": "danielvartan@proton.me",
+    "@id": "https://orcid.org/0000-0001-7782-759X"
+  },
+  "description": "Geospatial tiled datasets for spatial visualization and analysis in Brazil.",
+  "keywords": [
+    "PMTiles",
+    "Vector Tiles",
+    "Raster Tiles",
+    "Tiled Data",
+    "Spatial Data",
+    "Data Science",
+    "Spatial Data Science",
+    "Geospatial Data Science",
+    "Spatial Visualization",
+    "Data Visualization",
+    "GIS",
+    "Open Data",
+    "Open Science",
+    "Reproducible Research",
+    "Tippecanoe",
+    "R Programming",
+    "Brazil"
+  ],
+  "license": "https://www.gnu.org/licenses/gpl-3.0",
+  "codeRepository": "https://github.com/cem-usp/pmtilesbr",
+  "issueTracker": "https://github.com/cem-usp/pmtilesbr/issues",
+  "runtimePlatform": "R",
+  "relatedLink": [
+    "https://cem-usp.github.io/pmtilesbr"
+  ],
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "R",
+    "version": "4.5.3",
+    "url": "https://www.r-project.org/"
+  },
+  "operatingSystem": [
+    "Linux",
+    "macOS",
+    "Windows"
+  ],
+  "developmentStatus": "active",
+  "readme": "https://github.com/cem-usp/pmtilesbr/blob/main/README.md",
+  "releaseNotes": "https://github.com/cem-usp/pmtilesbr/blob/main/NEWS.md",
+  "version": "0.1.0.9000"
+}

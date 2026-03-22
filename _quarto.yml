@@ -1,8 +1,8 @@
 editor: source
 
 execute:
-  cache: false
-  freeze: false
+  cache: false # "Danger, Will Robinson!"
+  freeze: false # If you plan to use it, remember to disable it afterward!
 
 project:
   type: website
@@ -10,16 +10,18 @@ project:
   render: [index.qmd]
   post-render: "R/.post-render.R"
 
-title: "PMTiles"
+title: "PMTilesBR"
 keyword: >
-  Spatial Data Science, Geospatial Data, Geospatial Analysis,
-  Geospatial Visualization, PMTiles, Tippecanoe, R Programming
+  PMTiles, Vector Tiles, Raster Tiles, Tiled Data, Spatial Data, Data Science,
+  Spatial Data Science, Geospatial Data Science, Spatial Visualization, Data
+  Visualization, GIS, Open Data, Open Science, Reproducible Research,
+  Tippecanoe, R Programming, Brazil
 
 website:
   favicon: images/favicon.svg
-  site-url: https://cem-usp.github.io/pmtiles/
-  repo-url: https://github.com/cem-usp/pmtiles/
-  issue-url: https://github.com/cem-usp/pmtiles/issues/
+  site-url: https://cem-usp.github.io/pmtilesbr/
+  repo-url: https://github.com/cem-usp/pmtilesbr/
+  issue-url: https://github.com/cem-usp/pmtilesbr/issues/
   open-graph:
     image: images/og-image.png
     image-width: 2400
@@ -27,27 +29,39 @@ website:
     image-alt: Center for Metropolitan Studies
   repo-branch: main
   repo-actions: [edit, source, issue]
-  navbar: false
   sidebar: false
+  search: false
+  navbar:
+    title: false
+    background: "#070808"
+    right:
+      - icon: github
+        href: https://github.com/cem-usp/pmtilesbr/
+        aria-label: GitHub
 
 format:
   html:
-    open-graph: true
-    locale: en_US
-    lang: en_US
+    toc: true
+    toc-depth: 5
+    toc-location: right
+    locale: en
+    language: en-us
+    code-fold: false
     code-link: true
-    code-fold: true
-    tbl-cap-location: top
-    callout-appearance: simple
-    csl: csl/english-apa-author-date.csl
+    code-tools: false
+    df-print: paged
     fig-align: center
+    cap-location: top
+    callout-appearance: simple
     link-external-newwindow: true
-    theme: [default, brand, scss/styles.scss]
+    csl: csl/english-apa-author-date.csl
+    theme: [cosmo, scss/styles.scss, brand]
     include-in-header:
       text: |
         <meta property="og:description" content="">
-        <meta property="og:image" content="https://cem-usp.github.io/pmtiles/images/og-image.png">
+        <meta property="og:image" content="https://cem-usp.github.io/pmtilesbr/images/og-image.png">
         <meta property="og:image:height" content="2400">
         <meta property="og:image:width" content="1600">
 
+google-scholar: true
 bibliography: references.bib

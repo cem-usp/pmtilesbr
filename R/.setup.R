@@ -1,6 +1,7 @@
 # Load Packages -----
 
 library(brandr)
+library(colorspace)
 library(downlit)
 library(ggplot2)
 library(here)
@@ -41,21 +42,19 @@ options(BRANDR_BRAND_YML = here("_brand.yml"))
 
 brandr_options <- list(
   "BRANDR_COLOR_SEQUENTIAL" = get_brand_color(
-    c("blue", "white")
+    c("red", "white")
   ),
   "BRANDR_COLOR_DIVERGING" = get_brand_color(c(
-    "comp-blue-3",
+    "red",
     "white",
-    "comp-blue-6"
+    "yellow"
   )),
   "BRANDR_COLOR_QUALITATIVE" = get_brand_color(
     c(
-      "square-blue-green",
-      "square-blue-orange",
-      "square-blue-blue",
-      "square-blue-purple",
-      "gray",
-      "black"
+      "red",
+      "black",
+      "yellow",
+      "gray"
     )
   )
 )
@@ -69,11 +68,26 @@ for (i in seq_along(brandr_options)) {
 clear_registry()
 
 register_font(
-  name = "montserrat",
-  plain = here("ttf", "montserrat-regular.ttf"),
-  bold = here("ttf", "montserrat-black.ttf"),
-  italic = here("ttf", "montserrat-italic.ttf"),
-  bolditalic = here("ttf", "montserrat-bolditalic.ttf")
+  name = "nunito-sans-medium",
+  plain = here("ttf", "nunitosans-variablefont-ytlcopszwdthwght.ttf"),
+  italic = here("ttf", "nunitosans-italic-variablefont-ytlcopszwdthwght.ttf"),
+  features = font_feature(wght = 500)
+)
+
+# Bold (weight 700)
+register_font(
+  name = "nunito-sans-bold",
+  plain = here("ttf", "nunitosans-variablefont-ytlcopszwdthwght.ttf"),
+  italic = here("ttf", "nunitosans-italic-variablefont-ytlcopszwdthwght.ttf"),
+  features = font_feature(wght = 700)
+)
+
+# Black (weight 900)
+register_font(
+  name = "nunito-sans-black",
+  plain = here("ttf", "nunitosans-variablefont-ytlcopszwdthwght.ttf"),
+  italic = here("ttf", "nunitosans-italic-variablefont-ytlcopszwdthwght.ttf"),
+  features = font_feature(wght = 900)
 )
 
 # registry_fonts()
@@ -85,7 +99,7 @@ theme_set(
     theme(
       text = element_text(
         color = get_brand_color("black"),
-        family = "montserrat",
+        family = "nunito-sans-medium",
         face = "plain"
       ),
       panel.grid.major = element_blank(),
