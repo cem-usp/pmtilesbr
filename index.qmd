@@ -487,7 +487,7 @@ When using this data, you must also cite the original data sources.
 
 To cite this work, please use the following format:
 
-Vartanian, D., Fernandes, C. N., & Giannotti, M. A. (2026). *PMTilesBR: Tiled geospatial data for Brazil* \[Computer software\]. Center for Metropolitan Studies, University of São Paulo. <https://cem-usp.github.io/pmtilesbr>
+Vartanian, D., Fernandes, C. N., & Giannotti, M. A. (2026). *PMTilesBR: Tiled geospatial data for Brazil* \[Computer software\]. Center for Metropolitan Studies, University of São Paulo. <https://doi.org/10.5281/zenodo.19157888>
 
 A BibLaTeX entry for LaTeX users is:
 
@@ -499,7 +499,7 @@ A BibLaTeX entry for LaTeX users is:
   address = {São Paulo},
   institution = {Center for Metropolitan Studies, University of São Paulo},
   langid = {en},
-  url = {https://cem-usp.github.io/pmtilesbr}
+  doi = {https://doi.org/10.5281/zenodo.19157888}
 }
 ```
 

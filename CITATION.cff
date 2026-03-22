@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: "PMTiles: Tiled Geospatial Data for Brazil"
+title: "PMTilesBR: Tiled Geospatial Data for Brazil"
 message: >-
   If you use this software, please cite it using the metadata from this file.
 type: software
@@ -41,7 +41,7 @@ keywords:
   - Brazil
 preferred-citation:
   type: software
-  title: "PMTiles: Tiled geospatial data for Brazil"
+  title: "PMTilesBR: Tiled geospatial data for Brazil"
   authors:
   - given-names: Daniel
     family-names: Vartanian
@@ -58,8 +58,11 @@ preferred-citation:
     email: mariana.giannotti@usp.br
     affiliation: University of São Paulo
     orcid: "https://orcid.org/0000-0001-7782-759X"
-  url: https://cem-usp.github.io/pmtilesbr
+  doi: 10.5281/zenodo.19157888
 identifiers:
+  - type: doi
+    value: 10.5281/zenodo.19157888
+    description: Zenodo Record
   - type: url
     value: https://github.com/cem-usp/pmtilesbr
     description: GitHub Code Repository
@@ -68,4 +71,4 @@ identifiers:
     description: GitHub Pages Website
 repository-code: https://github.com/cem-usp/pmtilesbr
 license: GPL-3.0-or-later
-version: 0.1.0
+version: 0.1.1.9000

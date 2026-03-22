@@ -5,7 +5,7 @@
   "dateCreated": "2026-03-21",
   "applicationCategory": "Geospatial Data",
   "applicationSubCategory": "PMTiles",
-  "name": "PMTiles: Tiled Geospatial Data for Brazil",
+  "name": "PMTilesBR: Tiled Geospatial Data for Brazil",
   "author": [
     {
       "@type": "Person",
@@ -87,6 +87,7 @@
   "issueTracker": "https://github.com/cem-usp/pmtilesbr/issues",
   "runtimePlatform": "R",
   "relatedLink": [
+    "https://doi.org/10.5281/zenodo.19157888",
     "https://cem-usp.github.io/pmtilesbr"
   ],
   "programmingLanguage": {
@@ -103,5 +104,5 @@
   "developmentStatus": "active",
   "readme": "https://github.com/cem-usp/pmtilesbr/blob/main/README.md",
   "releaseNotes": "https://github.com/cem-usp/pmtilesbr/blob/main/NEWS.md",
-  "version": "0.1.0"
+  "version": "0.1.1.9000"
 }

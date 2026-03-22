@@ -32,7 +32,7 @@
     "href": "index.html#citation",
     "title": "PMTilesBR",
     "section": "Citation",
-    "text": "Citation\n\n\n\n\n\n\nWhen using this data, you must also cite the original data sources.\n\n\n\nTo cite this work, please use the following format:\nVartanian, D., Fernandes, C. N., & Giannotti, M. A. (2026). PMTilesBR: Tiled geospatial data for Brazil [Computer software]. Center for Metropolitan Studies, University of São Paulo. https://cem-usp.github.io/pmtilesbr\nA BibLaTeX entry for LaTeX users is:\n@software{vartanian2026,\n  title = {PMTilesBR: Tiled geospatial data for Brazil},\n  author = {{Daniel Vartanian} and {Camila Nastari Fernandes} and {Mariana Abrantes Giannotti}},\n  year = {2026},\n  address = {São Paulo},\n  institution = {Center for Metropolitan Studies, University of São Paulo},\n  langid = {en},\n  url = {https://cem-usp.github.io/pmtilesbr}\n}"
+    "text": "Citation\n\n\n\n\n\n\nWhen using this data, you must also cite the original data sources.\n\n\n\nTo cite this work, please use the following format:\nVartanian, D., Fernandes, C. N., & Giannotti, M. A. (2026). PMTilesBR: Tiled geospatial data for Brazil [Computer software]. Center for Metropolitan Studies, University of São Paulo. https://doi.org/10.5281/zenodo.19157888\nA BibLaTeX entry for LaTeX users is:\n@software{vartanian2026,\n  title = {PMTilesBR: Tiled geospatial data for Brazil},\n  author = {{Daniel Vartanian} and {Camila Nastari Fernandes} and {Mariana Abrantes Giannotti}},\n  year = {2026},\n  address = {São Paulo},\n  institution = {Center for Metropolitan Studies, University of São Paulo},\n  langid = {en},\n  doi = {https://doi.org/10.5281/zenodo.19157888}\n}"
   },
   {
     "objectID": "index.html#license",
