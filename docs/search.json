@@ -4,14 +4,14 @@
     "href": "index.html",
     "title": "PMTilesBR",
     "section": "",
-    "text": "This website hosts PMTiles files for spatial visualization and analysis in Brazil.\nPMTiles is a format for storing and serving tiled geospatial data. It is designed to be efficient, scalable, and easy to use, making it ideal for web applications and data visualization.\nWe plan to move these files to a more permanent hosting solution in the future.\n\n\n\n\n\n\n\n\n\n\n\nThe map below shows Brazil municipality boundaries as PMTiles, sourced from the geobr R package (Pereira & Goncalves, n.d.).\n\n\n\n\n\n\n\n\n\nClick and drag to pan. Right-click and drag to rotate. Hover over a shape to see the municipality name. Use the controls to zoom, take a screenshot, or view in fullscreen."
+    "text": "This website hosts PMTiles files for spatial visualization and analysis in Brazil.\nPMTiles is a format for storing and serving tiled geospatial data. It is designed to be efficient, scalable, and easy to use, making it ideal for web applications and data visualization.\nWe plan to move these files to a more permanent hosting solution in the future.\n\n\n\n\n\n\n\nThe map below shows Brazil municipality boundaries as PMTiles, sourced from the geobr R package (Pereira & Goncalves, n.d.).\n\n\n\n\n\n\n\n\n\nClick and drag to pan. Right-click and drag to rotate. Hover over a shape to see the municipality name. Use the controls to zoom, take a screenshot, or view in fullscreen."
   },
   {
     "objectID": "index.html#overview",
     "href": "index.html#overview",
     "title": "PMTilesBR",
     "section": "",
-    "text": "This website hosts PMTiles files for spatial visualization and analysis in Brazil.\nPMTiles is a format for storing and serving tiled geospatial data. It is designed to be efficient, scalable, and easy to use, making it ideal for web applications and data visualization.\nWe plan to move these files to a more permanent hosting solution in the future.\n\n\n\n\n\n\n\n\n\n\n\nThe map below shows Brazil municipality boundaries as PMTiles, sourced from the geobr R package (Pereira & Goncalves, n.d.).\n\n\n\n\n\n\n\n\n\nClick and drag to pan. Right-click and drag to rotate. Hover over a shape to see the municipality name. Use the controls to zoom, take a screenshot, or view in fullscreen."
+    "text": "This website hosts PMTiles files for spatial visualization and analysis in Brazil.\nPMTiles is a format for storing and serving tiled geospatial data. It is designed to be efficient, scalable, and easy to use, making it ideal for web applications and data visualization.\nWe plan to move these files to a more permanent hosting solution in the future.\n\n\n\n\n\n\n\nThe map below shows Brazil municipality boundaries as PMTiles, sourced from the geobr R package (Pereira & Goncalves, n.d.).\n\n\n\n\n\n\n\n\n\nClick and drag to pan. Right-click and drag to rotate. Hover over a shape to see the municipality name. Use the controls to zoom, take a screenshot, or view in fullscreen."
   },
   {
     "objectID": "index.html#why-use-pmtiles",

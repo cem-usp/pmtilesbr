@@ -9,19 +9,15 @@ here("R", ".setup.R") |> source()
 
 ## Overview {.first-h2}
 
-:::: {style="display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start;"}
 ::: {}
+![](images/logo.png){width="120" style="float: right; margin-left: 1.5rem; margin-top: 0.25rem;"}
+
 This website hosts [PMTiles](https://docs.protomaps.com/pmtiles/) files for spatial visualization and analysis in Brazil.
 
 [PMTiles](https://docs.protomaps.com/pmtiles/) is a format for storing and serving tiled geospatial data. It is designed to be efficient, scalable, and easy to use, making it ideal for web applications and data visualization.
 
 We plan to move these files to a more permanent hosting solution in the future.
 :::
-
-::: {style="margin-top: -1rem;"}
-![](images/logo.png){width="120"}
-:::
-::::
 
 ::: {.callout-note}
 The map below shows Brazil municipality boundaries as PMTiles, sourced from the [`geobr`](https://ipeagit.github.io/geobr/) R package [@pereirab].

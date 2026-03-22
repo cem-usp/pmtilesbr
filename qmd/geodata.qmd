@@ -56,7 +56,7 @@ library(fs)
 library(here)
 library(geodata)
 library(mapgl)
-library(pmtiles) # github.com/walkerke/pmtilesbr
+library(pmtiles) # github.com/walkerke/pmtiles
 library(sf)
 library(yyjsonr)
 ```

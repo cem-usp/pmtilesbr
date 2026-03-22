@@ -117,11 +117,7 @@ plot_maplibre <- function(
     add_navigation_control() |>
     add_screenshot_control() |>
     add_fullscreen_control() |>
-    add_reset_control(
-      position = "top-right",
-      animate = TRUE,
-      duration = NULL
-    )
+    add_reset_control()
 
   if (!is.null(line_width)) {
     out <-
