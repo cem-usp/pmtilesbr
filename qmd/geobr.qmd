@@ -50,6 +50,7 @@ The pipeline is fully reproducible and can be run again at any time. To ensure c
 #| label: Set the Environment
 #| output: false
 
+library(dplyr)
 library(fs)
 library(geobr)
 library(here)
@@ -76,7 +77,7 @@ for (i in c(data_dir)) {
 ### Set Initial Variables
 
 ```{r}
-year <- 2024
+year <- 2020
 ```
 
 ```{r}
@@ -101,7 +102,7 @@ max_zoom <- 10
 crs <- 4326
 ```
 
-## Download and Import Brazil Shape
+## Download, Import, and Transform Brazil Shape
 
 ```{r}
 name <- "read_country"
@@ -118,13 +119,21 @@ shape <-
   )
 ```
 
+```{r}
+shape |> glimpse()
+```
+
 ### Transform Data
 
 ```{r}
 shape <- shape |> st_transform(crs = crs)
 ```
 
-## Download and Import Brazil Regions Shapes
+```{r}
+shape |> glimpse()
+```
+
+## Download, Import, and Transform Brazil Regions Shapes
 
 ```{r}
 name <- "read_region"
@@ -140,13 +149,34 @@ shape <- read_region(
 )
 ```
 
+```{r}
+shape |> glimpse()
+```
+
 ### Transform Data
 
 ```{r}
-shape <- shape |> st_transform(crs = crs)
+shape <-
+  shape |>
+  mutate(
+    name_region_en = name_region |>
+      recode_values(
+        "Norte" ~ "North",
+        "Nordeste" ~ "Northeast",
+        "Sudeste" ~ "Southeast",
+        "Sul" ~ "South",
+        "Centro Oeste" ~ "Central-West"
+      )
+  ) |>
+  relocate(name_region_en, .after = name_region) |>
+  st_transform(crs = crs)
 ```
 
-## Download and Import Brazil States Shapes
+```{r}
+shape |> glimpse()
+```
+
+## Download, Import, and Transform Brazil States Shapes
 
 ```{r}
 name <- "read_state"
@@ -162,13 +192,21 @@ shape <- read_state(
 )
 ```
 
+```{r}
+shape |> glimpse()
+```
+
 ### Transform Data
 
 ```{r}
 shape <- shape |> st_transform(crs = crs)
 ```
 
-## Download and Import Brazil Municipalities Shapes
+```{r}
+shape |> glimpse()
+```
+
+## Download, Import, and Transform Brazil Municipalities Shapes
 
 ```{r}
 name <- "read_municipality"
@@ -185,16 +223,18 @@ shape <- read_municipality(
 )
 ```
 
-### Transform Data
-
 ```{r}
-shape <- shape |> st_transform(crs = crs)
+shape |> glimpse()
 ```
 
 ### Transform Data
 
 ```{r}
 shape <- shape |> st_transform(crs = crs)
+```
+
+```{r}
+shape |> glimpse()
 ```
 
 ## Create PMTiles

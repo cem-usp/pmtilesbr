@@ -51,6 +51,7 @@ The pipeline is fully reproducible and can be run again at any time. To ensure c
 #| code-fold: false
 #| output: false
 
+library(dplyr)
 library(fs)
 library(here)
 library(geodata)
@@ -101,7 +102,7 @@ max_zoom <- 6
 crs <- 4326
 ```
 
-## Download and Import World Shapes
+## Download, Import, and Transform World Shapes
 
 ```{r}
 name <- "world"

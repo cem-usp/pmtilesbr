@@ -425,7 +425,6 @@ world_data |> glimpse()
 
 ```{r}
 #| echo: false
-#| eval: false
 
 file |>
   plot_maplibre(
