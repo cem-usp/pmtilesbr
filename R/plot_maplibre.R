@@ -17,9 +17,11 @@ plot_maplibre <- function(
   bounds = NULL,
   fill_color = NULL,
   tooltip = NULL,
-  hover_options = NULL,
-  line_width = NULL,
-  scroll_zoom = TRUE,
+  hover_options = list(
+    fill_color = get_brand_color("gray-l50"),
+    fill_opacity = 1
+  ),
+  line_width = 0.75,
   seed = 1998,
   ...
 ) {
@@ -34,7 +36,6 @@ plot_maplibre <- function(
   assert_string(tooltip, null.ok = TRUE)
   assert_list(hover_options, null.ok = TRUE)
   assert_number(line_width, lower = 0, null.ok = TRUE)
-  assert_flag(scroll_zoom)
   assert_int(seed)
 
   if (!is_online()) {
@@ -97,7 +98,6 @@ plot_maplibre <- function(
       style = style,
       bounds = bounds,
       projection = projection,
-      scrollZoom = scroll_zoom,
       ...
     ) |>
     add_pmtiles_source(

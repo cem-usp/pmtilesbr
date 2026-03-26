@@ -9,7 +9,7 @@ here("R", ".setup.R") |> source()
 
 ## Overview
 
-This document describes the data munging process used to create PMTiles files for data sourced from the [`geodata`](https://rspatial.github.io/geodata/) R package [@hijmans2024].
+This document describes the data munging process used to create [PMTiles](https://docs.protomaps.com/pmtiles/) files for data sourced from the [`geodata`](https://rspatial.github.io/geodata/) R package [@hijmans2024].
 
 ## Methods
 
@@ -19,6 +19,8 @@ The data used in this pipeline come from the following sources:
 
 - [GADM](https://gadm.org/): Database of Global Administrative Areas
   - Data on administrative boundaries and regions, sourced via the [`geodata`](https://rspatial.github.io/geodata/) R package [@hijmans2024].
+- [Uber Technologies](https://www.uber.com/):
+  - Hexagonal grid data structured using the hexagonal hierarchical geospatial indexing system ([H3](https://h3geo.org/)) [@uber], processed with the [`h3r`](https://symbolixau.github.io/h3r) [@cooley2024] and [`h3jsr`](https://obrl-soil.github.io/h3jsr/) [@obrien2023] R packages.
 
 ### Data Munging
 
@@ -48,16 +50,18 @@ The pipeline is fully reproducible and can be run again at any time. To ensure c
 
 ```{r}
 #| label: Set the Environment
-#| code-fold: false
 #| output: false
 
 library(dplyr)
 library(fs)
+library(h3jsr)
 library(here)
 library(geodata)
+library(glue)
 library(mapgl)
 library(pmtiles) # github.com/walkerke/pmtiles
 library(sf)
+library(tidyr)
 library(yyjsonr)
 ```
 
@@ -78,39 +82,107 @@ for (i in c(data_dir, raw_data_dir)) {
 
 ### Set Initial Variables
 
+::: {.callout-note}
+The `country` variable specifies which country to retrieve. Use a three-letter country code that follows the [ISO 3166-1 alpha-3](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) standard (e.g., `BRA`, `ITA`, or `USA`).
+:::
+
 ```{r}
-resolution <- 5
+country <- "ARM"
 ```
+
+::: {.callout-note}
+The `level` variable specifies the level of detail of the data being retrieved. See [`world()`](https://rspatial.github.io/geodata/reference/world.html) and [`gadm()`](https://rspatial.github.io/geodata/reference/gadm.html) for more details on the available levels.
+:::
 
 ```{r}
 level <- 0
 ```
 
+::: {.callout-note}
+The `version` variable specifies the version of the data being retrieved. See [`world()`](https://rspatial.github.io/geodata/reference/world.html) and [`gadm()`](https://rspatial.github.io/geodata/reference/gadm.html) for more details on the available versions and their corresponding data updates.
+:::
+
 ```{r}
 version <- "latest"
 ```
 
+::: {.callout-note}
+The `resolution` variable specifies the resolution of the data being retrieved. See [`world()`](https://rspatial.github.io/geodata/reference/world.html) and [`gadm()`](https://rspatial.github.io/geodata/reference/gadm.html) for more details on the available resolutions and their corresponding levels of detail.
+:::
+
 ```{r}
-min_zoom <- 0
+resolution <- 1
+```
+
+::: {.callout-note}
+The `min_zoom` and `max_zoom` variables specify the minimum and maximum zoom levels for the PMTiles files. The zoom levels determine the level of detail and granularity of the data when visualized on a map. See [`pm_create()`](https://github.com/walkerke/pmtiles) for more details on how these parameters affect the PMTiles creation process.
+:::
+
+```{r}
+min_zoom <- 2
 ```
 
 ```{r}
-max_zoom <- 6
+max_zoom <- 10
+```
+
+::: {.callout-note}
+The `h3jsr` variable specifies whether to process the spatial data with the [`h3jsr`](https://obrl-soil.github.io/h3jsr/) R package, which converts spatial geometries into [H3](https://h3geo.org/) hexagonal grid cells. If `TRUE`, the `res` variable will define the resolution of the H3 grid.
+:::
+
+```{r}
+h3jsr <- FALSE
+```
+
+::: {.callout-note}
+The `res` variable specifies the resolution of the [H3 hexagonal grid](https://h3geo.org/). This only applies when using the [`h3jsr`](https://obrl-soil.github.io/h3jsr/) R package. See [`polygon_to_cells()`](https://obrl-soil.github.io/h3jsr/reference/polygon_to_cells.html) for more details on the available resolutions and their corresponding cell sizes.
+:::
+
+```{r}
+res <- 9
+```
+
+## Download and Import Country Shape
+
+```{r}
+#| label: Download and Import Country Shape
+#| eval: true
+
+name <- "gadm"
 ```
 
 ```{r}
-crs <- 4326
+#| eval: true
+
+shape <-
+  gadm(
+    country = country,
+    level = level,
+    path = raw_data_dir,
+    version = version,
+    resolution = resolution
+  ) |>
+  st_as_sf()
 ```
 
-## Download, Import, and Transform World Shapes
+```{r}
+#| eval: true
+
+shape |> glimpse()
+```
+
+## Download and Import World Shapes
 
 ```{r}
+#| label: Download and Import World Shapes
+#| eval: false
+
 name <- "world"
 ```
 
-### Download Data
-
 ```{r}
+#| eval: false
+
 shape <-
   world(
     resolution = resolution,
@@ -121,35 +193,70 @@ shape <-
   st_as_sf()
 ```
 
-### Transform Data
-
 ```{r}
-shape <- shape |> st_transform(crs = crs)
+#| eval: false
+
+shape |> glimpse()
 ```
 
 ## Create PMTiles
 
+### Transform Shapes
+
 ```{r}
-pattern <- paste0(
-  "gadm-",
-  name,
-  "-",
-  "resolution-",
-  resolution,
-  "-",
-  "level-",
-  level,
-  "-",
-  "version-",
-  version,
-  "-",
-  "min-zoom-",
-  min_zoom,
-  "-",
-  "max-zoom-",
-  max_zoom,
-  ".pmtiles"
-)
+#| label: Create PMTiles
+
+shape <-
+  shape |>
+  st_transform(crs = 4326)
+```
+
+```{r}
+shape |> glimpse()
+```
+
+### Create PMTiles
+
+#### Set Pattern
+
+```{r}
+if (isTRUE(h3jsr)) {
+  pattern <- file.path(
+    "geodata",
+    name,
+    "h3jsr",
+    paste0("res-", res)
+  )
+} else {
+  pattern <- file.path(
+    "geodata",
+    name
+  )
+}
+```
+
+```{r}
+pattern <-
+  pattern |>
+  file.path(
+    paste0(
+      ifelse(
+        name == "gadm",
+        paste0("country", "-", country, "-"),
+        ""
+      ),
+      # fmt: skip
+      paste(
+      "level", level,
+      "version", version,
+      "resolution", resolution,
+      "min_zoom", min_zoom,
+      "max_zoom", max_zoom,
+      sep = "-"
+    ),
+      ".pmtiles"
+    )
+  )
 ```
 
 ```{r}
@@ -157,37 +264,101 @@ pattern
 ```
 
 ```{r}
-#| eval: false
+for (i in c(data_dir, tempdir())) {
+  i |>
+    file.path(pattern) |>
+    dirname() |>
+    dir_create(recurse = TRUE)
+}
+```
 
+#### Process Shapes with `h3jsr`
+
+```{r}
+if (isTRUE(h3jsr)) {
+  shape <-
+    shape |>
+    polygon_to_cells(res = res, simple = FALSE) |>
+    st_drop_geometry() |>
+    unnest(h3_addresses) |>
+    relocate(h3_addresses) |>
+    cell_to_polygon(simple = FALSE) |>
+    relocate(h3_address)
+}
+```
+
+```{r}
+shape |> glimpse()
+```
+
+#### Create PMTiles
+
+```{r}
 shape |>
   pm_create(
-    here(data_dir, pattern),
+    output = tempdir() |> file.path(pattern),
     layer_name = name,
     min_zoom = min_zoom,
-    max_zoom = max_zoom
+    max_zoom = max_zoom,
+    description = glue(
+      "Tiles sourced from the {backtick(name)} function of the ",
+      "{backtick('geodata')} R package ",
+      "(",
+      ifelse(
+        name == "gadm",
+        paste0("country", " = ", double_quote(country), ", "),
+        ""
+      ),
+      "level = {level}, ",
+      "version = {double_quote(version)}, ",
+      "resolution = {resolution}",
+      ")",
+      ifelse(
+        isTRUE(h3jsr),
+        " and processed with the {backtick('h3jsr')} R package (res = {res}). ",
+        ". "
+      ),
+      "Created with the {backtick('pmtiles')} R package on {Sys.Date()}."
+    )
+  )
+```
+
+```{r}
+tempdir() |>
+  file.path(pattern) |>
+  file_move(
+    data_dir |>
+      file.path(pattern)
   )
 ```
 
 ## Inspect PMTiles
 
 ```{r}
-here(data_dir, pattern) |>
+#| label: Inspect PMTiles
+#| eval: false
+
+data_dir |>
+  file.path(pattern) |>
   pm_show(tilejson = TRUE)
 ```
 
 ## Visualize PMTiles
 
 ```{r}
-here(data_dir, pattern) |>
-  pm_view(
-    port = 8080
-  )
+#| label: Visualize PMTiles
+#| eval: false
+
+data_dir |>
+  file.path(pattern) |>
+  pm_view(port = 8080)
 ```
 
 ```{r}
+#| eval: false
+
 pm_stop_server()
 ```
-
 
 ## References {.unnumbered}
 

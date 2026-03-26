@@ -12,13 +12,15 @@
 
 ## Overview
 
-This repository hosts [PMTiles](https://docs.protomaps.com/pmtiles/) files for spatial visualization and analysis in Brazil.
+This repository hosts the source files for the [PMTilesBR](https://pmtiles.com.br) project, which provides [PMTiles](https://docs.protomaps.com/pmtiles/) files for spatial visualization and analysis in Brazil.
 
 [PMTiles](https://docs.protomaps.com/pmtiles/) is a format for storing and serving tiled geospatial data. It is designed to be efficient, scalable, and easy to use, making it ideal for web applications and data visualization.
 
-We plan to move these files to a more permanent hosting solution in the future.
+Learn more at: [pmtiles.com.br](https://pmtiles.com.br)
 
 > If you find this project useful, please consider giving it a star! &nbsp; [![GitHub Repository Stars](https://img.shields.io/github/stars/cem-usp/pmtilesbr)](https://github.com/cem-usp/pmtilesbr)
+
+[![Brazil Municipality Boundaries](images/mapgl-brazil-municipalities.png)](https://cem-usp.github.io/pmtilesbr/)
 
 ## Why Use PMTiles?
 
@@ -26,115 +28,28 @@ When working with complex geometries in web mapping applications like [Mapbox](h
 
 ## Usage
 
-Tiles are available in the [`pmtiles`](pmtiles) directory and are hosted at [cem-usp.github.io/pmtilesbr](https://cem-usp.github.io/pmtilesbr/). For descriptions and metadata for each file, visit the project site.
+You can find detailed instructions and examples on how to use PMTilesBR in the project [website](https://pmtiles.com.br).
 
-To load a file, pass its URL to your application. For example, using [R](https://www.r-project.org/):
+The PMTiles files are processed using the [Quarto](https://quarto.org/) publishing system, along with the [tippecanoe](https://github.com/felt/tippecanoe) tool and the [R](https://www.r-project.org/) programming language. To ensure consistent results, the [`renv`](https://rstudio.github.io/renv/) package is used to manage and restore the R environment.
 
-```r
-library(geobr)
-library(magrittr)
-library(mapgl)
-library(pmtiles) # github.com/walkerke/pmtiles
-```
-
-```r
-pmtiles_file <- file.path(
-  "https://cem-usp.github.io/pmtilesbr",
-  "pmtiles",
-  "geobr-2024-read_municipality-simplified-min-zoom-2-max-zoom-10.pmtiles"
-)
-```
-
-```r
-pmtiles_metadata <-
-  pmtiles_file |>
-  pm_show(tilejson = TRUE)
-```
-
-```r
-pmtiles_layer <-
-  pmtiles_metadata |>
-  extract2("vector_layers") |>
-  extract2(1) |>
-  extract2("id")
-```
-
-```r
-pmtiles_bbox <-
-  pmtiles_metadata |>
-  extract2("bounds") |>
-  unlist()
-```
-
-```r
-municipality_data <- read_municipality(
-  year = 2024,
-  simplified = TRUE,
-  showProgress = TRUE,
-  keep_areas_operacionais = FALSE
-)
-```
-
-```r
-set.seed(1998)
-
-scale_fill_mapgl <- match_expr(
-  column = "code_muni",
-  values = municipality_data |>
-    extract2("code_muni"),
-  stops = c("#db5025", "#070808", "#efd46a") |>
-    sample(
-      municipality_data |>
-        extract2("code_muni") |>
-        length(),
-      replace = TRUE,
-      prob = c(7, 1, 2)
-    ),
-  default = "#868489"
-)
-```
-
-```r
-pmtiles_bbox |>
-   maplibre(
-    bounds = _,
-    projection = "mercator",
-  ) |>
-  add_pmtiles_source(
-    id = "municipality_borders",
-    url = pmtiles_file,
-    source_type = "vector"
-  ) |>
-  add_fill_layer(
-    id = "screen_fill",
-    source = "municipality_borders",
-    source_layer = pmtiles_layer,
-    fill_color = scale_fill_mapgl
-  ) |>
-  add_line_layer(
-    id = "screen_outline",
-    source = "municipality_borders",
-    source_layer = pmtiles_layer,
-    line_color = "white",
-    line_width = 0.01
-  )
-```
-
-[![Brazil Municipality Boundaries](images/mapgl-brazil-municipalities.png)](https://cem-usp.github.io/pmtilesbr/)
-
-> [!TIP]
-> Use [pmtilesbr.io](https://pmtiles.io/#url=https%3A%2F%2Fcem-usp.github.io%2Fpmtilesbr%2Fpmtiles%2Fgeobr-2024-read_municipality-simplified-min-zoom-2-max-zoom-10.pmtiles&map=3.87/-15.13/-51.42) to easily inspect each PMTiles file before using.
-
-## Rendering
-
-The files were processed using the [Quarto](https://quarto.org/) publishing system, along with the [Tippecanoe](https://github.com/felt/tippecanoe) tool and the [R](https://www.r-project.org/) programming language. To ensure consistent results, the [`renv`](https://rstudio.github.io/renv/) package is used to manage and restore the R environment.
-
-After installing the dependencies mentioned above, follow these steps to render the tiles:
+After installing the dependencies mentioned above, follow these steps to render the files:
 
 1. **Clone** this repository to your local machine.
 2. **Open** the project in your preferred [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment).
-3. **Install package dependencies** by running [`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html) in the R console. This will install all required software dependencies.
+3. **Install package dependencies** by running [`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html) in the R console.
 4. **Open** the Quarto notebooks in the [`qmd`](qmd) directory and run the code as described .
+
+To reproduce the website examples, see the [index.qmd](index.qmd) notebook.
+
+## Website
+
+The project website files can be found in the [`docs`](docs) folder. It is made with the [Quarto](https://quarto.org/) publishing system and hosted on [Cloudflare](https://www.cloudflare.com/), with automatic deployment on every commit.
+
+To render it, you must first meet all the requirements listed in the [Usage](#usage) section. After all dependencies are installed, render the website by running the following command in your terminal from the root directory of the project:
+
+```bash
+quarto render
+```
 
 ## Contributing
 
@@ -177,7 +92,7 @@ A BibLaTeX entry for LaTeX users is:
 > [!NOTE]
 > The original data sources may be subject to their own licensing terms and conditions.
 
-The code in this repository is licensed under the [GNU General Public License Version 3](https://www.gnu.org/licenses/gpl-3.0), while the files are available under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
+The code in this repository is licensed under the [GNU General Public License Version 3](https://www.gnu.org/licenses/gpl-3.0). All PMTiles files are released under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
 
 ```
 Copyright (C) 2026 Center for Metropolitan Studies

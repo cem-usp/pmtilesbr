@@ -9,7 +9,7 @@ here("R", ".setup.R") |> source()
 
 ## Overview
 
-This document describes the data munging process used to create PMTiles files for data sourced from the [`geobr`](https://ipeagit.github.io/geobr/) R package [@pereirab].
+This document describes the data munging process used to create [PMTiles](https://docs.protomaps.com/pmtiles/) files for data sourced from the [`geobr`](https://ipeagit.github.io/geobr/) R package [@pereirab].
 
 ## Methods
 
@@ -19,6 +19,8 @@ The data used in this pipeline come from the following sources:
 
 - Brazilian Institute of Geography and Statistics ([IBGE](https://www.ibge.gov.br/)):
   - Brazil boundary data via the [`geobr`](https://ipeagit.github.io/geobr/) R package [@pereirab].
+- [Uber Technologies](https://www.uber.com/):
+  - Hexagonal grid data structured using the hexagonal hierarchical geospatial indexing system ([H3](https://h3geo.org/)) [@uber], processed with the [`h3jsr`](https://obrl-soil.github.io/h3jsr/) [@obrien2023] R packages.
 
 ### Data Munging
 
@@ -53,10 +55,14 @@ The pipeline is fully reproducible and can be run again at any time. To ensure c
 library(dplyr)
 library(fs)
 library(geobr)
+library(glue)
+library(h3jsr)
 library(here)
 library(mapgl)
+library(orbis) # github.com/danielvartan/orbis
 library(pmtiles) # github.com/walkerke/pmtiles
 library(sf)
+library(tidyr)
 library(yyjsonr)
 ```
 
@@ -76,19 +82,38 @@ for (i in c(data_dir)) {
 
 ### Set Initial Variables
 
+::: {.callout-note}
+The `code` variable specifies the IBGE code of the Brazilian territorial unit to retrieve. Use `"all"` to retrieve all units. For the full list of IBGE codes and their corresponding territorial units, see <https://sidra.ibge.gov.br/territorio>.
+:::
+
 ```{r}
-year <- 2020
+# brazil_region_code("North")
+# brazil_state_code("Rio de Janeiro")
+# brazil_municipality_code("São Paulo")
+# "all" to select all units
+
+code <- 1501402
 ```
 
+::: {.callout-note}
+The `year` variable specifies the year of the data.
+:::
+
 ```{r}
-simplified <- TRUE
+year <- 2024
 ```
 
-```{r}
-#| eval: false
+::: {.callout-note}
+The `simplified` variable specifies whether to use simplified geometries for the spatial data. Simplified geometries are less detailed and have fewer vertices, which can improve performance when visualizing or processing the data, especially for large datasets.
+:::
 
+```{r}
 simplified <- FALSE
 ```
+
+::: {.callout-note}
+The `min_zoom` and `max_zoom` variables specify the minimum and maximum zoom levels for the PMTiles files. The zoom levels determine the level of detail and granularity of the data when visualized on a map. See [`pm_create()`](https://github.com/walkerke/pmtiles) for more details on how these parameters affect the PMTiles creation process.
+:::
 
 ```{r}
 min_zoom <- 2
@@ -98,50 +123,86 @@ min_zoom <- 2
 max_zoom <- 10
 ```
 
+::: {.callout-note}
+The `h3jsr` variable specifies whether to process the spatial data with the [`h3jsr`](https://obrl-soil.github.io/h3jsr/) R package, which converts spatial geometries into [H3](https://h3geo.org/) hexagonal grid cells. If `TRUE`, the `res` variable will define the resolution of the H3 grid.
+:::
+
 ```{r}
-crs <- 4326
+h3jsr <- TRUE
 ```
 
-## Download, Import, and Transform Brazil Shape
+::: {.callout-note}
+The `res` variable specifies the resolution of the [H3 hexagonal grid](https://h3geo.org/). This only applies when using the [`h3jsr`](https://obrl-soil.github.io/h3jsr/) R package. See [`polygon_to_cells()`](https://obrl-soil.github.io/h3jsr/reference/polygon_to_cells.html) for more details on the available resolutions and their corresponding cell sizes.
+:::
 
 ```{r}
-name <- "read_country"
+res <- 9
 ```
 
-### Download Data
+## Download and Import Municipalities Shapes
 
 ```{r}
-shape <-
-  read_country(
-    year = year,
-    simplified = simplified,
-    showProgress = FALSE
-  )
+#| label: Download and Import Municipalities Shapes
+#| eval: true
+
+name <- "read_municipality"
 ```
 
 ```{r}
+#| eval: true
+
+shape <- read_municipality(
+  code_muni = code,
+  year = year,
+  simplified = simplified,
+  showProgress = FALSE
+)
+```
+
+```{r}
+#| eval: true
+
 shape |> glimpse()
 ```
 
-### Transform Data
+## Download and Import States Shapes
 
 ```{r}
-shape <- shape |> st_transform(crs = crs)
+#| label: Download and Import States Shapes
+#| eval: false
+
+name <- "read_state"
 ```
 
 ```{r}
+#| eval: false
+
+shape <- read_state(
+  code_state = code,
+  year = year,
+  simplified = simplified,
+  showProgress = FALSE
+)
+```
+
+```{r}
+#| eval: false
+
 shape |> glimpse()
 ```
 
-## Download, Import, and Transform Brazil Regions Shapes
+## Download and Import Regions Shapes
 
 ```{r}
+#| label: Download and Import Regions Shapes
+#| eval: false
+
 name <- "read_region"
 ```
 
-### Download Data
-
 ```{r}
+#| eval: false
+
 shape <- read_region(
   year = year,
   simplified = simplified,
@@ -150,110 +211,121 @@ shape <- read_region(
 ```
 
 ```{r}
+#| eval: false
+
 shape |> glimpse()
 ```
 
-### Transform Data
+## Download and Import Country Shape
 
 ```{r}
+#| label: Download and Import Country Shape
+#| eval: false
+
+name <- "read_country"
+```
+
+```{r}
+#| eval: false
+
 shape <-
-  shape |>
-  mutate(
-    name_region_en = name_region |>
-      recode_values(
-        "Norte" ~ "North",
-        "Nordeste" ~ "Northeast",
-        "Sudeste" ~ "Southeast",
-        "Sul" ~ "South",
-        "Centro Oeste" ~ "Central-West"
-      )
-  ) |>
-  relocate(name_region_en, .after = name_region) |>
-  st_transform(crs = crs)
+  read_country(
+    year = year,
+    simplified = FALSE,
+    showProgress = FALSE
+  )
 ```
 
 ```{r}
-shape |> glimpse()
-```
+#| eval: false
 
-## Download, Import, and Transform Brazil States Shapes
-
-```{r}
-name <- "read_state"
-```
-
-### Download Data
-
-```{r}
-shape <- read_state(
-  year = year,
-  simplified = simplified,
-  showProgress = FALSE
-)
-```
-
-```{r}
-shape |> glimpse()
-```
-
-### Transform Data
-
-```{r}
-shape <- shape |> st_transform(crs = crs)
-```
-
-```{r}
-shape |> glimpse()
-```
-
-## Download, Import, and Transform Brazil Municipalities Shapes
-
-```{r}
-name <- "read_municipality"
-```
-
-### Download Data
-
-```{r}
-shape <- read_municipality(
-  year = year,
-  simplified = simplified,
-  showProgress = FALSE,
-  keep_areas_operacionais = FALSE
-)
-```
-
-```{r}
-shape |> glimpse()
-```
-
-### Transform Data
-
-```{r}
-shape <- shape |> st_transform(crs = crs)
-```
-
-```{r}
 shape |> glimpse()
 ```
 
 ## Create PMTiles
 
+### Transform Shapes
+
+#### Change Coordinate Reference System (CRS)
+
 ```{r}
-pattern <- paste0(
-  "geobr-",
-  year,
-  "-",
-  name,
-  "-",
-  ifelse(isTRUE(simplified), "simplified-", ""),
-  "min-zoom-",
-  min_zoom,
-  "-",
-  "max-zoom-",
-  max_zoom,
-  ".pmtiles"
-)
+#| label: Create PMTiles
+
+shape <-
+  shape |>
+  st_transform(crs = 4326)
+```
+
+```{r}
+shape |> glimpse()
+```
+
+#### Recode Region Names
+
+```{r}
+if ("name_region" %in% colnames(shape)) {
+  shape <-
+    shape |>
+    mutate(
+      name_region_en = name_region |>
+        recode_values(
+          "Norte" ~ "North",
+          "Nordeste" ~ "Northeast",
+          "Sudeste" ~ "Southeast",
+          "Sul" ~ "South",
+          "Centro Oeste" ~ "Central-West"
+        )
+    ) |>
+    relocate(name_region_en, .after = name_region)
+}
+```
+
+```{r}
+shape |> glimpse()
+```
+
+### Create PMTiles
+
+#### Set Pattern
+
+```{r}
+if (isTRUE(h3jsr)) {
+  pattern <- file.path(
+    "geobr",
+    name,
+    "h3jsr",
+    paste0("res-", res)
+  )
+} else {
+  pattern <- file.path(
+    "geobr",
+    name
+  )
+}
+```
+
+```{r}
+
+pattern <-
+  pattern |>
+  file.path(
+    paste0(
+      ifelse(
+        !name %in% c("read_country", "read_region"),
+        paste0("code", "-", code, "-"),
+        ""
+      ),
+      # fmt: skip
+      paste(
+      "year", year,
+      "simplified", simplified,
+      "min_zoom", min_zoom,
+      "max_zoom", max_zoom,
+      sep = "-"
+    ),
+      ".pmtiles"
+    )
+  )
 ```
 
 ```{r}
@@ -261,34 +333,102 @@ pattern
 ```
 
 ```{r}
-#| eval: false
+for (i in c(data_dir, tempdir())) {
+  i |>
+    file.path(pattern) |>
+    dirname() |>
+    dir_create(recurse = TRUE)
+}
+```
 
+#### Process Shapes with `h3jsr`
+
+```{r}
+if (isTRUE(h3jsr)) {
+  shape <-
+    shape |>
+    polygon_to_cells(res = res, simple = FALSE) |>
+    st_drop_geometry() |>
+    unnest(h3_addresses) |>
+    relocate(h3_addresses) |>
+    cell_to_polygon(simple = FALSE) |>
+    relocate(h3_address)
+}
+```
+
+```{r}
+shape |> glimpse()
+```
+
+#### Create PMTiles
+
+```{r}
+code <- ifelse(is.character(code), double_quote(code), code)
+```
+
+```{r}
 shape |>
   pm_create(
-    here(data_dir, pattern),
+    output = tempdir() |> file.path(pattern),
     layer_name = name,
     min_zoom = min_zoom,
-    max_zoom = max_zoom
+    max_zoom = max_zoom,
+    description = glue(
+      "Tiles sourced from the {backtick(name)} function of the ",
+      "{backtick('geobr')} R package ",
+      "(",
+      ifelse(
+        name %in% c("read_country", "read_region"),
+        "",
+        paste0("code", " = ", code, ", ")
+      ),
+      "year = {year}, ",
+      "simplified = {simplified}",
+      ")",
+      ifelse(
+        isTRUE(h3jsr),
+        " and processed with the {backtick('h3jsr')} R package (res = {res}). ",
+        ". "
+      ),
+      "Created with the {backtick('pmtiles')} R package on {Sys.Date()}."
+    )
+  )
+```
+
+```{r}
+tempdir() |>
+  file.path(pattern) |>
+  file_move(
+    data_dir |>
+      file.path(pattern)
   )
 ```
 
 ## Inspect PMTiles
 
 ```{r}
-here(data_dir, pattern) |>
+#| label: Inspect PMTiles
+#| eval: false
+
+data_dir |>
+  file.path(pattern) |>
   pm_show(tilejson = TRUE)
 ```
 
 ## Visualize PMTiles
 
 ```{r}
-here(data_dir, pattern) |>
-  pm_view(
-    port = 8080
-  )
+#| label: Visualize PMTiles
+#| eval: false
+
+data_dir |>
+  file.path(pattern) |>
+  pm_view(port = 8080)
 ```
 
 ```{r}
+#| eval: false
+
 pm_stop_server()
 ```
 

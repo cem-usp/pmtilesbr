@@ -16,7 +16,7 @@ This website hosts [PMTiles](https://docs.protomaps.com/pmtiles/) files for spat
 
 [PMTiles](https://docs.protomaps.com/pmtiles/) is a format for storing and serving tiled geospatial data. It is designed to be efficient, scalable, and easy to use, making it ideal for web applications and data visualization.
 
-We plan to move these files to a more permanent hosting solution in the future.
+Learn more about PMTiles and how to use them in the following sections.
 :::
 
 ::: {.callout-note}
@@ -38,11 +38,15 @@ library(dplyr)
 library(fs)
 library(geobr)
 library(geodata)
+library(h3jsr)
+library(here)
 library(httr2)
 library(magrittr)
 library(mapgl)
 library(pmtiles) # github.com/walkerke/pmtiles
+library(purrr)
 library(sf)
+library(tidyr)
 ```
 
 ```{r}
@@ -55,27 +59,36 @@ here("R", "plot_maplibre.R") |> source()
 #| include: false
 
 raw_data_dir <- here("data-raw")
-data_dir <- here("pmtiles")
 ```
 
 ```{r}
 #| include: false
 
-for (i in c(data_dir, raw_data_dir)) {
-  if (!dir_exists(i)) {
-    dir_create(i, recurse = TRUE)
-  }
+if (!dir_exists(raw_data_dir)) {
+  dir_create(raw_data_dir, recurse = TRUE)
 }
 ```
 
 ```{r}
-#| label: column screen
+#| label: Column Screen
 #| include: false
 
 file <- file.path(
-  "https://cem-usp.github.io/pmtilesbr",
-  "pmtiles",
-  "geobr-2024-read_municipality-simplified-min-zoom-2-max-zoom-10.pmtiles"
+  "https://tiles.pmtiles.com.br",
+  "geobr",
+  "read_municipality",
+  paste0(
+    # fmt: skip
+    paste(
+      "code", "all",
+      "year", 2024,
+      "simplified", TRUE,
+      "min_zoom", 2,
+      "max_zoom", 10,
+      sep = "-"
+    ),
+    ".pmtiles"
+  )
 )
 ```
 
@@ -85,8 +98,7 @@ file <- file.path(
 municipality_data <- read_municipality(
   year = 2024,
   simplified = TRUE,
-  showProgress = FALSE,
-  keep_areas_operacionais = FALSE
+  showProgress = FALSE
 )
 ```
 
@@ -104,14 +116,14 @@ file |>
   plot_maplibre(
     column = "code_muni",
     values = municipality_data |>
-      extract2("code_muni"),
+      pull("code_muni"),
     tooltip = "name_muni",
     hover_options = list(
       fill_color = get_brand_color("gray-l50"),
       fill_opacity = 1
     ),
     line_width = 0.01,
-    scroll_zoom = FALSE,
+    scrollZoom = FALSE,
     seed = 1998
   )
 ```
@@ -120,10 +132,16 @@ file |>
 
 When working with complex geometries in web mapping applications like [Mapbox](https://www.mapbox.com/), [MapLibre](https://maplibre.org/), and [Leaflet](https://leafletjs.com/), performance can become [a real problem](https://walker-data.com/posts/pmtiles-texas-blocks/). Shapes with many vertices make rendering slow, bloat file sizes, and generally make life harder. [PMTiles](https://docs.protomaps.com/pmtiles/) addresses this by letting you serve precompiled tiles directly from the web, rather than bundling them into your application.
 
-## Files
+## Collections {#collections-1}
+
+PMTilesBR includes several collections of [PMTiles](https://docs.protomaps.com/pmtiles/) files sourced from popular geospatial [R](https://www.r-project.org/) packages. Below is an overview of each one:
 
 ::: {.callout-note}
-See the code repository [README](https://github.com/cem-usp/pmtilesbr#pmtilesbr-) to learn more about how the files were created.
+See the [*Usage*](#usage) section for instructions on how to access and use the PMTiles files.
+:::
+
+::: {.callout-important}
+Not all parameter combinations may be available. Refer to [`pmtiles.yaml`](https://github.com/cem-usp/pmtilesbr/blob/main/pmtiles.yaml){target="_blank"} for the full list of available PMTiles files.
 :::
 
 ::: {.callout-tip}
@@ -132,96 +150,58 @@ Unless you really need to, use the simplified versions of the files, which are s
 
 ::: {.panel-tabset .map-tabset}
 
-## `geobr::read_country()`
+## `geobr::read_municipality`
 
 Sourced from the [`geobr`](https://ipeagit.github.io/geobr/) R package [@pereirab].
 
 #### Parameters
 
-- Year: 2020
-- Layer: `"read_country"`
+- Code: `"all"` (for all municipalities) or a specific municipality code (e.g., 3550308 for São Paulo)
+- Year: 1872-2024
 - Simplified: `TRUE`/`FALSE`
-- Minimum Zoom: 2
-- Maximum Zoom: 10
-
-#### Files
-
-- [`geobr-2020-read_country-min-zoom-2-max-zoom-10.pmtiles`](pmtiles/geobr-2020-read_country-min-zoom-2-max-zoom-10.pmtiles)
-- [`geobr-2020-read_country-simplified-min-zoom-2-max-zoom-10.pmtiles`](pmtiles/geobr-2020-read_country-simplified-min-zoom-2-max-zoom-10.pmtiles)
+- Minimum Zoom: 0-22
+- Maximum Zoom: 0-22
 
 #### View
 
 ```{r}
-#| label: geobr::read_country()
+#| label: geobr::read_municipality()
 #| include: false
 
 file <- file.path(
-  "https://cem-usp.github.io/pmtilesbr",
-  "pmtiles",
-  "geobr-2020-read_country-simplified-min-zoom-2-max-zoom-10.pmtiles"
-)
-```
-
-```{r}
-#| include: false
-#| eval: false
-
-pm_show(file, tilejson = TRUE)
-```
-
-```{r}
-#| echo: false
-
-file |>
-  plot_maplibre(
-    column = "code_muni",
-    fill_color = get_brand_color("red"),
-    line_width = 1
+  "https://tiles.pmtiles.com.br",
+  "geobr",
+  "read_municipality",
+  paste0(
+    # fmt: skip
+    paste(
+      "code", "all",
+      "year", 2024,
+      "simplified", TRUE,
+      "min_zoom", 2,
+      "max_zoom", 10,
+      sep = "-"
+    ),
+    ".pmtiles"
   )
-```
-
-## `geobr::read_region()`
-
-Sourced from the [`geobr`](https://ipeagit.github.io/geobr/) R package [@pereirab].
-
-#### Parameters
-
-- Year: 2020
-- Layer: `"read_region"`
-- Simplified: `TRUE`/`FALSE`
-- Minimum Zoom: 2
-- Maximum Zoom: 10
-
-#### Files
-
-- [`geobr-2020-read_region-min-zoom-2-max-zoom-10.pmtiles`](pmtiles/geobr-2020-read_region-min-zoom-2-max-zoom-10.pmtiles)
-- [`geobr-2020-read_region-simplified-min-zoom-2-max-zoom-10.pmtiles`](pmtiles/geobr-2020-read_region-simplified-min-zoom-2-max-zoom-10.pmtiles)
-
-#### View
-
-```{r}
-#| label: geobr::read_region()
-#| include: false
-
-file <- file.path(
-  "https://cem-usp.github.io/pmtilesbr",
-  "pmtiles",
-  "geobr-2020-read_region-simplified-min-zoom-2-max-zoom-10.pmtiles"
 )
 ```
+
+**File**: `r paste0("<", file, ">")`
 
 ```{r}
 #| include: false
 #| eval: false
 
-pm_show(file, tilejson = TRUE)
+file |> pm_show(tilejson = TRUE)
 ```
 
 ```{r}
+#| eval: false
 #| include: false
 
-region_data <- read_region(
-  year = 2020,
+municipality_data <- read_municipality(
+  year = 2024,
   simplified = TRUE,
   showProgress = FALSE
 )
@@ -230,7 +210,7 @@ region_data <- read_region(
 ```{r}
 #| include: false
 
-region_data |> glimpse()
+municipality_data |> glimpse()
 ```
 
 ```{r}
@@ -238,35 +218,116 @@ region_data |> glimpse()
 
 file |>
   plot_maplibre(
-    column = "code_region",
-    values = region_data |>
-      extract2("code_region"),
-    tooltip = "name_region_en",
+    column = "code_muni",
+    values = municipality_data |>
+      pull("code_muni"),
+    tooltip = "name_muni",
     hover_options = list(
       fill_color = get_brand_color("gray-l50"),
       fill_opacity = 1
     ),
-    line_width = 1,
-    seed = 2013
+    line_width = 0.01,
+    seed = 1998
   )
 ```
 
-## `geobr::read_state()`
+#### H3 Grids
+
+This collection also counts with PMTiles files that were processed with the [h3jsr](https://obrl-soil.github.io/h3jsr/) R package [@obrien2023], which converts spatial data into [H3 grids](https://h3geo.org/) [@uber]. These files have an additional `res` parameter that indicates the [H3 resolution](https://h3geo.org/docs/core-library/restable/#cell-counts) used for processing. The higher the resolution, the more detailed the grid will be, but also the larger the file size and the slower the rendering.
+
+To use this version of the files, add `h3jsr` and `res` parameters to the URL. For example, to access the H3 version of the file with municipality code 3550308, year 2024, without simplified geometries, zoom levels 2-10, and H3 resolution 9, the URL would be:
+
+```{r}
+#| include: false
+
+file <- file.path(
+  "https://tiles.pmtiles.com.br",
+  "geobr",
+  "read_municipality",
+  "h3jsr",
+  "res-9",
+  paste0(
+    # fmt: skip
+    paste(
+      "code", 3550308,
+      "year", 2024,
+      "simplified", FALSE,
+      "min_zoom", 2,
+      "max_zoom", 10,
+      sep = "-"
+    ),
+    ".pmtiles"
+  )
+)
+```
+
+**File**: `r paste0("<", file, ">")`
+
+::: {.callout-note}
+If you're seeing missing hexagons when using these files, it's likely you are trying to match a [H3](https://h3geo.org/) grid made with a simplified geometry with an H3 grid made with a non-simplified geometry. To fix this, make sure to use the same value for the `simplified` parameter in both the source function and the PMTiles file.
+:::
+
+```{r}
+#| include: false
+#| eval: false
+
+file |> pm_show(tilejson = TRUE)
+```
+
+```{r}
+#| include: false
+
+municipality_data <- read_municipality(
+  code_muni = 3550308,
+  year = 2024,
+  simplified = FALSE,
+  showProgress = FALSE
+) |>
+  st_transform(crs = 4326) |>
+  polygon_to_cells(res = 9, simple = FALSE) |>
+  st_drop_geometry() |>
+  unnest(h3_addresses) |>
+  relocate(h3_addresses) |>
+  cell_to_polygon(simple = FALSE) |>
+  relocate(h3_address) |>
+  st_as_sf()
+```
+
+```{r}
+#| include: false
+
+municipality_data |> glimpse()
+```
+
+```{r}
+#| echo: false
+
+file |>
+  plot_maplibre(
+    column = "h3_address",
+    values = municipality_data |>
+      pull("h3_address"),
+    tooltip = "h3_address",
+    hover_options = list(
+      fill_color = get_brand_color("gray-l50"),
+      fill_opacity = 1
+    ),
+    line_width = 0.001,
+    seed = 1998
+  )
+```
+
+## `geobr::read_state`
 
 Sourced from the [`geobr`](https://ipeagit.github.io/geobr/) R package [@pereirab].
 
 #### Parameters
 
-- Year: 2020
-- Layer: `"read_state"`
+- Year: 1872-2020
+- Code: `"all"` (for all states) or a specific state code (e.g., 35 for São Paulo)
 - Simplified: `TRUE`/`FALSE`
-- Minimum Zoom: 2
-- Maximum Zoom: 10
-
-#### Files
-
-- [`geobr-2020-read_state-min-zoom-2-max-zoom-10.pmtiles`](pmtiles/geobr-2020-read_state-min-zoom-2-max-zoom-10.pmtiles)
-- [`geobr-2020-read_state-simplified-min-zoom-2-max-zoom-10.pmtiles`](pmtiles/geobr-2020-read_state-simplified-min-zoom-2-max-zoom-10.pmtiles)
+- Minimum Zoom: 0-22
+- Maximum Zoom: 0-22
 
 #### View
 
@@ -275,17 +336,31 @@ Sourced from the [`geobr`](https://ipeagit.github.io/geobr/) R package [@pereira
 #| include: false
 
 file <- file.path(
-  "https://cem-usp.github.io/pmtilesbr",
-  "pmtiles",
-  "geobr-2020-read_state-simplified-min-zoom-2-max-zoom-10.pmtiles"
+  "https://tiles.pmtiles.com.br",
+  "geobr",
+  "read_state",
+  paste0(
+    # fmt: skip
+    paste(
+      "code", "all",
+      "year", 2020,
+      "simplified", TRUE,
+      "min_zoom", 2,
+      "max_zoom", 10,
+      sep = "-"
+    ),
+    ".pmtiles"
+  )
 )
 ```
+
+**File**: `r paste0("<", file, ">")`
 
 ```{r}
 #| include: false
 #| eval: false
 
-pm_show(file, tilejson = TRUE)
+file |> pm_show(tilejson = TRUE)
 ```
 
 ```{r}
@@ -311,7 +386,7 @@ file |>
   plot_maplibre(
     column = "code_state",
     values = state_data |>
-      extract2("code_state"),
+      pull("code_state"),
     tooltip = "name_state",
     hover_options = list(
       fill_color = get_brand_color("gray-l50"),
@@ -322,59 +397,126 @@ file |>
   )
 ```
 
-## `geobr::read_municipality()`
+## `geobr::read_region`
 
 Sourced from the [`geobr`](https://ipeagit.github.io/geobr/) R package [@pereirab].
 
 #### Parameters
 
-- Year: 2024
-- Layer: `"read_municipality"`
+- Year: 2000-2020
 - Simplified: `TRUE`/`FALSE`
-- Minimum Zoom: 2
-- Maximum Zoom: 10
-
-#### Files
-
-- [`geobr-2024-read_municipality-min-zoom-2-max-zoom-10.pmtiles`](pmtiles/geobr-2024-read_municipality-min-zoom-2-max-zoom-10.pmtiles)
-- [`geobr-2024-read_municipality-simplified-min-zoom-2-max-zoom-10.pmtiles`](pmtiles/geobr-2024-read_municipality-simplified-min-zoom-2-max-zoom-10.pmtiles)
+- Minimum Zoom: 0-22
+- Maximum Zoom: 0-22
 
 #### View
 
 ```{r}
-#| label: geobr::read_municipality()
+#| label: geobr::read_region()
 #| include: false
 
 file <- file.path(
-  "https://cem-usp.github.io/pmtilesbr",
-  "pmtiles",
-  "geobr-2024-read_municipality-simplified-min-zoom-2-max-zoom-10.pmtiles"
+  "https://tiles.pmtiles.com.br",
+  "geobr",
+  "read_region",
+  paste0(
+    # fmt: skip
+    paste(
+      "year", 2020,
+      "simplified", TRUE,
+      "min_zoom", 2,
+      "max_zoom", 10,
+      sep = "-"
+    ),
+    ".pmtiles"
+  )
 )
 ```
 
+**File**: `r paste0("<", file, ">")`
+
 ```{r}
 #| include: false
 #| eval: false
 
-pm_show(file, tilejson = TRUE)
+file |> pm_show(tilejson = TRUE)
 ```
 
 ```{r}
-#| eval: false
 #| include: false
 
-municipality_data <- read_municipality(
-  year = 2024,
+region_data <- read_region(
+  year = 2020,
   simplified = TRUE,
-  showProgress = FALSE,
-  keep_areas_operacionais = FALSE
+  showProgress = FALSE
 )
 ```
 
 ```{r}
 #| include: false
 
-municipality_data |> glimpse()
+region_data |> glimpse()
+```
+
+```{r}
+#| echo: false
+
+file |>
+  plot_maplibre(
+    column = "code_region",
+    values = region_data |>
+      pull("code_region"),
+    tooltip = "name_region_en",
+    hover_options = list(
+      fill_color = get_brand_color("gray-l50"),
+      fill_opacity = 1
+    ),
+    line_width = 1,
+    seed = 2013
+  )
+```
+
+## `geobr::read_country`
+
+Sourced from the [`geobr`](https://ipeagit.github.io/geobr/) R package [@pereirab].
+
+#### Parameters
+
+- Years: 1872-2020
+- Simplified: `TRUE`/`FALSE`
+- Minimum Zoom: 0-22
+- Maximum Zoom: 0-22
+
+#### View
+
+```{r}
+#| label: geobr::read_country()
+#| include: false
+
+file <- file.path(
+  "https://tiles.pmtiles.com.br",
+  "geobr",
+  "read_country",
+  paste0(
+    # fmt: skip
+    paste(
+      "year", 2020,
+      "simplified", "TRUE",
+      "min_zoom", 2,
+      "max_zoom", 10,
+      sep = "-"
+    ),
+    ".pmtiles"
+  )
+)
+```
+
+**File**: `r paste0("<", file, ">")`
+
+```{r}
+#| include: false
+#| eval: false
+
+file |> pm_show(tilejson = TRUE)
 ```
 
 ```{r}
@@ -383,35 +525,103 @@ municipality_data |> glimpse()
 file |>
   plot_maplibre(
     column = "code_muni",
-    values = municipality_data |>
-      extract2("code_muni"),
-    tooltip = "name_muni",
-    hover_options = list(
-      fill_color = get_brand_color("gray-l50"),
-      fill_opacity = 1
-    ),
-    line_width = 0.01,
-    seed = 1998
+    fill_color = get_brand_color("red"),
+    line_width = 1
   )
 ```
 
-## `geodata::world()`
+## `geodata::gadm`
 
 Sourced from the [`geodata`](https://rspatial.github.io/geodata/) R package [@hijmans2024].
 
 #### Parameters
 
-- Layer: `"world"`
-- Resolution: 5
+- Country: [ISO 3166-1 alpha-3](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) standard (e.g., `BRA`, `ITA`, or `USA`)
+- Level: 0-1
+- Version: `"latest"`/`"4.1"`/`"4.0"`/`"3.6"`
+- Resolution: 1-2
+- Minimum Zoom: 0-22
+- Maximum Zoom: 0-22
+
+#### View
+
+```{r}
+#| label: geodata::gadm()
+#| include: false
+
+file <- file.path(
+  "https://tiles.pmtiles.com.br",
+  "geodata",
+  "gadm",
+  paste0(
+    # fmt: skip
+    paste(
+      "country", "ARM",
+      "level", 0,
+      "version", "latest",
+      "resolution", 1,
+      "min_zoom", "2",
+      "max_zoom", "10",
+      sep = "-"
+    ),
+    ".pmtiles"
+  )
+)
+```
+
+**File**: `r paste0("<", file, ">")`
+
+```{r}
+#| include: false
+#| eval: false
+
+file |> pm_show(tilejson = TRUE)
+```
+
+```{r}
+#| include: false
+
+country_data <- gadm(
+  country = "ARM",
+  level = 0,
+  path = raw_data_dir,
+  version = "latest",
+  resolution = 1
+) |>
+  st_as_sf()
+```
+
+```{r}
+#| include: false
+
+country_data |> glimpse()
+```
+
+```{r}
+#| echo: false
+
+file |>
+  plot_maplibre(
+    column = "GID_0",
+    values = country_data |>
+      pull("GID_0"),
+    tooltip = "COUNTRY",
+  )
+```
+
+## `geodata::world`
+
+Sourced from the [`geodata`](https://rspatial.github.io/geodata/) R package [@hijmans2024].
+
+#### Parameters
+
 - Level: 0
-- Version: `"latest"` (created in 2026)
-- Minimum Zoom: 0
-- Maximum Zoom: 6/10
+- Version: `"latest"`/`"3.6"`
+- Resolution: 1-5
+- Minimum Zoom: 0-22
+- Maximum Zoom: 0-22
 
-#### Files
-
-- [`gadm-world-resolution-5-level-0-version-latest-min-zoom-0-max-zoom-6.pmtiles`](pmtiles/gadm-world-resolution-5-level-0-version-latest-min-zoom-0-max-zoom-6.pmtiles)
-- [`gadm-world-resolution-5-level-0-version-latest-min-zoom-0-max-zoom-10.pmtiles`](pmtiles/gadm-world-resolution-5-level-0-version-latest-min-zoom-0-max-zoom-10.pmtiles)
+The `resolution` parameter always comes after `version`, to match with the [`gadm()`](https://rspatial.github.io/geodata/reference/gadm.html) function.
 
 #### View
 
@@ -420,20 +630,31 @@ Sourced from the [`geodata`](https://rspatial.github.io/geodata/) R package [@hi
 #| include: false
 
 file <- file.path(
-  "https://cem-usp.github.io/pmtilesbr",
-  "pmtiles",
+  "https://tiles.pmtiles.com.br",
+  "geodata",
+  "world",
   paste0(
-    "gadm-world-resolution-5-level-0-version-latest-",
-    "min-zoom-0-max-zoom-6.pmtiles"
+    # fmt: skip
+    paste(
+      "level", 0,
+      "version", "latest",
+      "resolution", 5,
+      "min_zoom", 0,
+      "max_zoom", 6,
+      sep = "-"
+    ),
+    ".pmtiles"
   )
 )
 ```
+
+**File**: `r paste0("<", file, ">")`
 
 ```{r}
 #| include: false
 #| eval: false
 
-pm_show(file, tilejson = TRUE)
+file |> pm_show(tilejson = TRUE)
 ```
 
 ```{r}
@@ -461,19 +682,221 @@ file |>
   plot_maplibre(
     column = "GID_0",
     values = world_data |>
-      extract2("GID_0"),
+      pull("GID_0"),
     bounds = c(-175, -75, 180, 85),
     tooltip = "NAME_0",
     hover_options = list(
       fill_color = get_brand_color("gray-l50"),
       fill_opacity = 1
     ),
-    line_width = 0.5,
-    seed = 2025
+    line_width = 0.5
   )
 ```
 
 :::
+
+## Usage
+
+All files are hosted at `https://tiles.pmtiles.com.br` and follow a consistent URL structure based on the collection, source function, parameters, and zoom levels. The sections below cover how to access the files, inspect their metadata, and use them in your applications.
+
+For a complete list of available PMTiles files and their metadata, see [`pmtiles.yaml`](https://github.com/cem-usp/pmtilesbr/blob/main/pmtiles.yaml){target="_blank"}.
+
+### Collections {#collections-2}
+
+PMTilesBR have different collections of tiles for you to choose. These collections are typically sourced from popular R packages for geospatial data, such as [`geobr`](https://ipeagit.github.io/geobr/) [@pereirab] and [`geodata`](https://rspatial.github.io/geodata/) [@hijmans2024]. Each collection has its own set of parameters that you can use to get the specific tiles you need. See the [*Collections*](#collections-1) section to learn more.
+
+### Patterns
+
+To access the PMTiles files, construct a URL following this naming pattern:
+```text
+https://tiles.pmtiles.com.br/
+├─ {collection}/
+   ├─ {function}/
+      ├─ {parameters-values}-{min_zoom-value}-{max_zoom-value}.pmtiles
+```
+
+Where:
+
+- `collection`: The data collection name, typically the source R package (e.g., [`geobr`](https://ipeagit.github.io/geobr/)).
+- `function`: The function used to source the data (e.g., [`read_municipality()`](https://ipeagit.github.io/geobr/reference/read_municipality.html)).
+- `parameters-values`: The parameter names and values passed to the function.
+- `min_zoom-value`: The minimum [zoom level](https://github.com/felt/tippecanoe#zoom-levels).
+- `max_zoom-value`: The maximum [zoom level](https://github.com/felt/tippecanoe#zoom-levels).
+
+All files include `min_zoom` and `max_zoom` in their names. Unlisted parameters use their default values.
+
+For example, a file from the [`geobr`](https://ipeagit.github.io/geobr/) package using [`read_municipality()`](https://ipeagit.github.io/geobr/reference/read_municipality.html) with municipality code 3550308, year 2024, simplified geometries, and zoom levels 2-10 would be:
+
+<https://tiles.pmtiles.com.br/geobr/read_municipality/code-3550308-year-2024-simplified-TRUE-min_zoom-2-max_zoom-10.pmtiles>
+
+::: {.callout-tip}
+Use [pmtiles.io](https://pmtiles.io/#url=https://tiles.pmtiles.com.br/geobr/read_municipality/code-3550308-year-2024-simplified-TRUE-min_zoom-2-max_zoom-10.pmtiles){target="_blank"} to easily inspect each PMTiles file before using.
+:::
+
+### Example
+
+The simplest way to load a PMTiles file is to pass its URL directly to your application. Here is an example using [R](https://www.r-project.org/) and the [`mapgl`](https://walker-data.com/mapgl/) package [@walker2026a]:
+
+```{r}
+library(dplyr)
+library(geobr)
+library(mapgl)
+library(pmtiles) # github.com/walkerke/pmtiles
+library(purrr)
+```
+
+```{r}
+code <- "all"
+year <- 2020
+simplified <- TRUE
+min_zoom <- 2
+max_zoom <- 10
+```
+
+```{r}
+pmtiles_file <- file.path(
+  "https://tiles.pmtiles.com.br",
+  "geobr",
+  "read_state",
+  paste0(
+    # fmt: skip
+    paste(
+      "code", code,
+      "year", year,
+      "simplified", simplified,
+      "min_zoom", min_zoom,
+      "max_zoom", max_zoom,
+      sep = "-"
+    ),
+    ".pmtiles"
+  )
+)
+```
+
+```{r}
+pmtiles_layer <-
+  pmtiles_file |>
+  pm_show(tilejson = TRUE) |>
+  pluck("vector_layers", 1, "id")
+```
+
+```{r}
+#| output: false
+
+state_data <-
+  code |>
+  read_state(
+    year = year,
+    simplified = simplified
+  ) |>
+  filter(
+    # MG, ES, RJ, SP
+    code_state %in% c(31, 32, 33, 35)
+  )
+```
+
+```{r}
+scale_fill_mapgl <- match_expr(
+  column = "code_state",
+  values = state_data |>
+    pull(code_state),
+  stops = c(
+    "#efd46a", # MG
+    "#db5025", # ES
+    "#070808", # RJ
+    "#db5025" # SP
+  ),
+  default = "#868489"
+)
+```
+
+```{r}
+maplibre(
+  # c(xmin, ymin, xmax, ymax)
+  bounds = c(-51.0, -26, -39.6, -13.5),
+  projection = "mercator",
+) |>
+  add_pmtiles_source(
+    id = "state_boundaries",
+    url = pmtiles_file,
+    source_type = "vector"
+  ) |>
+  add_fill_layer(
+    id = "fill",
+    source = "state_boundaries",
+    source_layer = pmtiles_layer,
+    fill_color = scale_fill_mapgl,
+    tooltip = "name_state",
+    hover_options = list(
+      fill_color = get_brand_color("gray-l50"),
+      fill_opacity = 1
+    ),
+    # fmt: skip
+    filter = list(
+      "in",
+      list("get", "code_state"),
+      list("literal", list(35, 33, 31, 32))
+    )
+  ) |>
+  add_line_layer(
+    id = "outline",
+    source = "state_boundaries",
+    source_layer = pmtiles_layer,
+    line_color = "white",
+    line_width = 1
+  )
+```
+
+### H3 Grids
+
+Some collections also include files with geometries indexed using the [h3jsr](https://obrl-soil.github.io/h3jsr/) R package [@obrien2023], which converts spatial data into [H3 hexagonal grids](https://h3geo.org/) [@uber]. These files include additional parameters in their URLs, such as the H3 resolution level. See `geobr::read_municipality` in the [*Collections*](#collections-1) section for examples and details.
+
+### Metadata
+
+One way to check for a PMTiles file metadata is to use the [`pm_show()`](https://walkerke.r-universe.dev/pmtiles/doc/manual.html#pm_show) function from the [`pmtiles`](https://walkerke.github.io/pmtiles/) R package [@walker2025]. This function retrieves the metadata of a PMTiles file, including the bounds, zoom levels, and the fields available. Here is an example:
+
+```{r}
+library(pmtiles)
+library(purrr)
+```
+
+```{r}
+file <- file.path(
+  "https://tiles.pmtiles.com.br",
+  "geobr",
+  "read_municipality",
+  paste0(
+    # fmt: skip
+    paste(
+      "code", 3550308,
+      "year", 2024,
+      "simplified", TRUE,
+      "min_zoom", 2,
+      "max_zoom", 10,
+      sep = "-"
+    ),
+    ".pmtiles"
+  )
+)
+```
+
+```{r}
+file |>
+  pm_show(tilejson = TRUE) |>
+  pluck("vector_layers", 1, "fields")
+```
+
+The PMTiles [layer id](https://walker-data.com/mapgl/reference/add_pmtiles_source.html#:~:text=id,-A) is always the name of the source function.
+
+```{r}
+file |>
+  pm_show(tilejson = TRUE) |>
+  pluck("vector_layers", 1, "id")
+```
+
+### Questions and Requests
+
+If you have any questions about the data, how to use it, or if you want to request a specific PMTiles file, please visit the [Discussions](https://github.com/cem-usp/pmtilesbr/discussions){target="_blank"} tab of the project code repository. We will do our best to assist you and consider your requests for future updates.
 
 ## Citation
 
@@ -510,12 +933,12 @@ A BibLaTeX entry for LaTeX users is:
 The original data sources may be subject to their own licensing terms and conditions.
 :::
 
-The code in this repository is licensed under the [GNU General Public License Version 3](https://www.gnu.org/licenses/gpl-3.0), while the files are available under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
+The code in this website is licensed under the [GNU General Public License Version 3](https://www.gnu.org/licenses/gpl-3.0). All PMTiles files are released under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
 
 ```
 Copyright (C) 2026 Center for Metropolitan Studies
 
-The code in this report is free software: you can redistribute it and/or
+The code in this website is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License as published by the
 Free Software Foundation, either version 3 of the License, or (at your option)
 any later version.
