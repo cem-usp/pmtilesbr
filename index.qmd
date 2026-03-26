@@ -14,7 +14,7 @@ here("R", ".setup.R") |> source()
 
 This website hosts [PMTiles](https://docs.protomaps.com/pmtiles/) files for spatial visualization and analysis in Brazil.
 
-[PMTiles](https://docs.protomaps.com/pmtiles/) is a format for storing and serving tiled geospatial data. It is designed to be efficient, scalable, and easy to use, making it ideal for web applications and data visualization.
+PMTiles is a format for storing and serving tiled geospatial data. It is designed to be efficient, scalable, and easy to use, making it ideal for web applications and data visualization.
 
 Learn more about PMTiles and how to use them in the following sections.
 :::
@@ -708,11 +708,12 @@ PMTilesBR have different collections of tiles for you to choose. These collectio
 ### Patterns
 
 To access the PMTiles files, construct a URL following this naming pattern:
-```text
+
+```
 https://tiles.pmtiles.com.br/
 ├─ {collection}/
-   ├─ {function}/
-      ├─ {parameters-values}-{min_zoom-value}-{max_zoom-value}.pmtiles
+    ├─ {function}/
+        ├─ {parameters-values}-{min_zoom-value}-{max_zoom-value}.pmtiles
 ```
 
 Where:
@@ -853,7 +854,7 @@ Some collections also include files with geometries indexed using the [h3jsr](ht
 
 ### Metadata
 
-One way to check for a PMTiles file metadata is to use the [`pm_show()`](https://walkerke.r-universe.dev/pmtiles/doc/manual.html#pm_show) function from the [`pmtiles`](https://walkerke.github.io/pmtiles/) R package [@walker2025]. This function retrieves the metadata of a PMTiles file, including the bounds, zoom levels, and the fields available. Here is an example:
+One way to check for a PMTiles file metadata is to use the [`pm_show()`](https://walkerke.r-universe.dev/pmtiles/doc/manual.html#pm_show) function from the [`pmtiles`](https://github.com/walkerke/pmtiles) R package [@walker2025]. This function retrieves the metadata of a PMTiles file, including the bounds, zoom levels, and the fields available. Here is an example:
 
 ```{r}
 library(pmtiles)

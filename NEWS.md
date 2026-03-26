@@ -7,6 +7,7 @@
 - The [Quarto](https://quarto.org/) notebooks were improved to support additional output formats.
 - The file naming pattern was simplified to make it easier to work with.
 - A [`pmtiles.yaml`](https://github.com/cem-usp/pmtilesbr/blob/main/pmtiles.yaml) file was added to help find and manage available PMTiles files.
+- Several PMTiles were added.
 - A [FAIR](https://www.go-fair.org/) checklist and compliance badges were added to the repository.
 - A [Zenodo](https://zenodo.org/) DOI badge was added to make the software easier to cite.
 
