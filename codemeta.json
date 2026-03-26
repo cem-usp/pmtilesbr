@@ -87,8 +87,8 @@
   "issueTracker": "https://github.com/cem-usp/pmtilesbr/issues",
   "runtimePlatform": "R",
   "relatedLink": [
-    "https://doi.org/10.5281/zenodo.19157888",
-    "https://cem-usp.github.io/pmtilesbr"
+    "https://pmtiles.com.br",
+    "https://doi.org/10.5281/zenodo.19157888"
   ],
   "programmingLanguage": {
     "@type": "ComputerLanguage",

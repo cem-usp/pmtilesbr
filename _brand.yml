@@ -1,7 +1,7 @@
 meta:
   name: PMTilesBR
   link:
-    home: https://cem-usp.github.io/pmtilesbr/
+    home: https://pmtiles.com.br
     github: https://github.com/cem-usp/pmtilesbr
   description: |
     Geospatial tiled datasets for spatial visualization and analysis in Brazil.

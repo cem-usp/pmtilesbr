@@ -20,7 +20,7 @@ Learn more at: [pmtiles.com.br](https://pmtiles.com.br)
 
 > If you find this project useful, please consider giving it a star! &nbsp; [![GitHub Repository Stars](https://img.shields.io/github/stars/cem-usp/pmtilesbr)](https://github.com/cem-usp/pmtilesbr)
 
-[![Brazil Municipality Boundaries](images/mapgl-brazil-municipalities.png)](https://cem-usp.github.io/pmtilesbr/)
+[![Brazil Municipality Boundaries](images/mapgl-brazil-municipalities.png)](https://pmtiles.com.br)
 
 ## Why Use PMTiles?
 

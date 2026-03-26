@@ -64,11 +64,11 @@ identifiers:
     value: 10.5281/zenodo.19157888
     description: Zenodo Record
   - type: url
+    value: https://pmtiles.com.br
+    description: Website
+  - type: url
     value: https://github.com/cem-usp/pmtilesbr
     description: GitHub Code Repository
-  - type: url
-    value: https://cem-usp.github.io/pmtilesbr
-    description: GitHub Pages Website
 repository-code: https://github.com/cem-usp/pmtilesbr
 license: GPL-3.0-or-later
 version: 0.2.1.9000

@@ -23,7 +23,7 @@ date-format: long
 
 website:
   favicon: images/logo.svg
-  site-url: https://cem-usp.github.io/pmtilesbr/
+  site-url: https://pmtiles.com.br
   repo-url: https://github.com/cem-usp/pmtilesbr/
   issue-url: https://github.com/cem-usp/pmtilesbr/issues/
   open-graph:
