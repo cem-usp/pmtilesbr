@@ -1,7 +1,9 @@
 *.qmd linguist-detectable
-
 *.qmd linguist-language=R
 
+references.bib linguist-documentation
 images/** linguist-documentation
 docs/** linguist-documentation
+html/** linguist-documentation
+scss/** linguist-documentation
 ttf/** linguist-documentation
