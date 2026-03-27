@@ -80,7 +80,7 @@ for (i in c(data_dir, raw_data_dir)) {
 }
 ```
 
-### Set Initial Variables
+### Set Initial Parameters
 
 ::: {.callout-note}
 The `country` variable specifies which country to retrieve. Use a three-letter country code that follows the [ISO 3166-1 alpha-3](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) standard (e.g., `BRA`, `ITA`, or `USA`).

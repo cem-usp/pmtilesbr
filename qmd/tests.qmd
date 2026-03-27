@@ -1,0 +1,110 @@
+```{r}
+#| label: setup
+#| include: false
+
+library(here)
+
+here("R", ".setup.R") |> source()
+```
+
+## Overview
+
+This document describes the testing process used after the creation of the [PMTiles](https://docs.protomaps.com/pmtiles/) files.
+
+## Methods
+
+### Code Style
+
+The Tidyverse [tidy tools manifesto](https://tidyverse.tidyverse.org/articles/manifesto.html) [@wickham2023c], [code style guide](https://style.tidyverse.org/) [@wickhama] and [design principles](https://design.tidyverse.org/) [@wickhamc] were followed to ensure consistency and enhance readability.
+
+### Reproducibility
+
+The pipeline is fully reproducible and can be run again at any time. To ensure consistent results, the [`renv`](https://rstudio.github.io/renv/) package [@ushey2025] is used to manage and restore the R environment. See the [README](https://github.com/cem-usp/pmtilesbr/blob/main/README.md) file in the code repository to learn how to run it.
+
+## Set the Environment
+
+### Load Packages
+
+```{r}
+#| label: Set the Environment
+#| output: false
+
+library(cli)
+library(fs)
+library(here)
+library(pmtiles) # github.com/walkerke/pmtiles
+library(stringr)
+```
+
+### Set Data Directories
+
+```{r}
+raw_data_dir <- here("data-raw")
+data_dir <- here("pmtiles")
+```
+
+```{r}
+for (i in c(data_dir, raw_data_dir)) {
+  if (!dir_exists(i)) {
+    dir_create(i, recurse = TRUE)
+  }
+}
+```
+
+### Set Initial Parameters
+
+::: {.callout-note}
+The `year` variable specifies the year of the data.
+:::
+
+```{r}
+year <- 2024
+```
+
+```{r}
+pmtiles_dir <- data_dir
+```
+
+## Test and Delete Corrupted PMTiles
+
+```{r}
+#| label: Test and Delete Corrupted PMTiles
+
+files <-
+  pmtiles_dir |>
+  dir_ls(
+    type = "file",
+    recurse = TRUE,
+    glob = "*.pmtiles"
+  ) |>
+  str_subset(
+    paste0("year-", year)
+  )
+```
+
+```{r}
+cli_progress_bar(
+  name = "Testing PMTiles",
+  total = length(files)
+)
+
+for (i in files) {
+  test <-
+    i |>
+    pm_show(tilejson = TRUE) |>
+    try(silent = TRUE)
+
+  if (inherits(test, "try-error")) {
+    file_delete(i)
+  }
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+## References {.unnumbered}
+
+::: {#refs}
+:::

@@ -2,6 +2,6 @@
 
 *.qmd linguist-language=R
 
-images/* linguist-documentation
-docs/* linguist-documentation
-ttf/* linguist-documentation
+images/** linguist-documentation
+docs/** linguist-documentation
+ttf/** linguist-documentation

@@ -80,7 +80,7 @@ for (i in c(data_dir)) {
 }
 ```
 
-### Set Initial Variables
+### Set Initial Parameters
 
 ::: {.callout-note}
 The `code` variable specifies the IBGE code of the Brazilian territorial unit to retrieve. Use `"all"` to retrieve all units. For the full list of IBGE codes and their corresponding territorial units, see <https://sidra.ibge.gov.br/territorio>.
@@ -92,7 +92,7 @@ The `code` variable specifies the IBGE code of the Brazilian territorial unit to
 # brazil_municipality_code("São Paulo")
 # "all" to select all units
 
-code <- 1501402
+code <- 5106000
 ```
 
 ::: {.callout-note}
@@ -128,7 +128,7 @@ The `h3jsr` variable specifies whether to process the spatial data with the [`h3
 :::
 
 ```{r}
-h3jsr <- TRUE
+h3jsr <- FALSE
 ```
 
 ::: {.callout-note}
