@@ -1,0 +1,7 @@
+*.qmd linguist-detectable
+
+*.qmd linguist-language=R
+
+images/* linguist-documentation
+docs/* linguist-documentation
+ttf/* linguist-documentation
