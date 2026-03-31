@@ -33,7 +33,9 @@ library(cli)
 library(fs)
 library(here)
 library(pmtiles) # github.com/walkerke/pmtiles
+library(purrr)
 library(stringr)
+library(yaml)
 ```
 
 ### Set Data Directories
@@ -65,6 +67,10 @@ year <- 2024
 pmtiles_dir <- data_dir
 ```
 
+```{r}
+yaml_file <- here("pmtiles.yaml")
+```
+
 ## Test and Delete Corrupted PMTiles
 
 ```{r}
@@ -76,10 +82,17 @@ files <-
     type = "file",
     recurse = TRUE,
     glob = "*.pmtiles"
-  ) |>
-  str_subset(
-    paste0("year-", year)
   )
+```
+
+```{r}
+if (!is.null(year)) {
+  files <-
+    files |>
+    str_subset(
+      paste0("year-", year)
+    )
+}
 ```
 
 ```{r}
@@ -102,6 +115,45 @@ for (i in files) {
 }
 
 cli_progress_done()
+```
+
+## Check Files with `pmtiles.yaml`
+
+```{r}
+#| label: Check Files with `pmtiles.yaml`
+
+yaml_data <- read_yaml(yaml_file)
+```
+
+```{r}
+if (!is.null(year)) {
+  yaml_data <-
+    yaml_data |>
+    str_subset(
+      paste0("year-", year)
+    )
+}
+```
+
+```{r}
+hosted_files <-
+  yaml_data |>
+  pluck("objects") |>
+  map(\(x) x |> pluck("key")) |>
+  unlist() |>
+  str_subset("\\.pmtiles$")
+```
+
+```{r}
+missing_files <-
+  files |>
+  path_rel(data_dir) |>
+  as.character() %>%
+  setdiff(hosted_files)
+```
+
+```{r}
+missing_files
 ```
 
 ## References {.unnumbered}

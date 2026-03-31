@@ -21,7 +21,7 @@ max_zoom <- 10
 h3jsr <- FALSE
 res <- 9
 
-year <- 2024
+year <- 2020
 
 # year <-
 #   read_state(year = 0000) |>
@@ -43,36 +43,36 @@ year <- 2024
 #     sort()
 # )
 
-# code <- c(
-#   double_quote("all"),
-#   c(
-#     2507507, # João Pessoa (PB)
-#     3106200, # Belo Horizonte (MG)
-#     3550308, # São Paulo (SP)
-#     4314902, # Porto Alegre (RS)
-#     1501402 # Belém (PA)
-#   )
-# )
+code <- c(
+  # double_quote("all"),
+  c(
+    2507507, # João Pessoa (PB)
+    3106200, # Belo Horizonte (MG)
+    3550308, # São Paulo (SP)
+    4314902, # Porto Alegre (RS)
+    1501402 # Belém (PA)
+  )
+)
 
-code <-
-  read_municipality(year = year) |>
-  arrange(1) |>
-  pull(1) # %>%
-# c(double_quote("all"), .)
+# code <-
+#   read_municipality(year = year) |>
+#   arrange(1) |>
+#   pull(1) # %>%
+# # c(double_quote("all"), .)
 
-code <-
-  here("pmtiles", "geobr", "read_municipality") |>
-  dir_ls(type = "file") |>
-  basename() |>
-  str_subset(paste0("year-", year)) |>
-  str_extract("\\d+") |>
-  as.integer() |>
-  unique() |>
-  sort() %>%
-  setdiff(code, .) |>
-  sort()
+# code <-
+#   here("pmtiles", "geobr", "read_municipality") |>
+#   dir_ls(type = "file") |>
+#   basename() |>
+#   str_subset(paste0("year-", year)) |>
+#   str_extract("\\d+") |>
+#   as.integer() |>
+#   unique() |>
+#   sort() %>%
+#   setdiff(code, .) |>
+#   sort()
 
-length(code)
+# length(code)
 
 # Replace Fixed Values -----
 

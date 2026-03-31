@@ -92,7 +92,7 @@ The `code` variable specifies the IBGE code of the Brazilian territorial unit to
 # brazil_municipality_code("São Paulo")
 # "all" to select all units
 
-code <- 5106000
+code <- 1501402
 ```
 
 ::: {.callout-note}
@@ -100,7 +100,7 @@ The `year` variable specifies the year of the data.
 :::
 
 ```{r}
-year <- 2024
+year <- 2020
 ```
 
 ::: {.callout-note}
@@ -108,7 +108,7 @@ The `simplified` variable specifies whether to use simplified geometries for the
 :::
 
 ```{r}
-simplified <- FALSE
+simplified <- TRUE
 ```
 
 ::: {.callout-note}

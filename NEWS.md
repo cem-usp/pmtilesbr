@@ -1,5 +1,7 @@
 ## v0.2.1.9000 (development version)
 
+- Several PMTiles were added.
+
 ## v0.2.0 (2026-03-26)
 
 - The project now has its own domain: <https://pmtiles.com.br>
