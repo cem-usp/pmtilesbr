@@ -1,6 +1,7 @@
 ## v0.2.1.9000 (development version)
 
 - Several PMTiles were added.
+- The [Quarto](https://quarto.org/) notebooks were improved.
 
 ## v0.2.0 (2026-03-26)
 
