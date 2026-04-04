@@ -5,9 +5,9 @@ library(httr2)
 library(mime)
 
 #' @examples
-#' r2_upload("path/to/file", "object/key")
+#' r2_upload_file("path/to/file", "object/key")
 
-r2_upload <- function(
+r2_upload_file <- function(
   file,
   object_key,
   bucket_name = Sys.getenv("CLOUDFLARE_BUCKET_NAME"),

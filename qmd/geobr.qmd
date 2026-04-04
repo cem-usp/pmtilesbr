@@ -1,3 +1,19 @@
+---
+# See Set Environment > Check Parameters to learn more.
+params:
+  fun: "read_municipality"
+  # code <- brazil_municipality_code("São Paulo")
+  # code <- brazil_state_code("São Paulo")
+  # Use "all" to select all units.
+  code: 3550308
+  year: 2024
+  simplified: true
+  min_zoom: 2
+  max_zoom: 10
+  h3jsr: false
+  res: 9
+---
+
 ```{r}
 #| label: setup
 #| include: false
@@ -44,7 +60,7 @@ The Tidyverse [tidy tools manifesto](https://tidyverse.tidyverse.org/articles/ma
 
 The pipeline is fully reproducible and can be run again at any time. To ensure consistent results, the [`renv`](https://rstudio.github.io/renv/) package [@ushey2025] is used to manage and restore the R environment. See the [README](https://github.com/cem-usp/pmtilesbr/blob/main/README.md) file in the code repository to learn how to run it.
 
-## Set the Environment
+## Set Environment
 
 ### Load Packages
 
@@ -52,15 +68,21 @@ The pipeline is fully reproducible and can be run again at any time. To ensure c
 #| label: Set the Environment
 #| output: false
 
+library(cli)
+library(checkmate)
 library(dplyr)
 library(fs)
 library(geobr)
 library(glue)
 library(h3jsr)
 library(here)
+library(lobstr)
 library(mapgl)
 library(orbis) # github.com/danielvartan/orbis
 library(pmtiles) # github.com/walkerke/pmtiles
+library(purrr)
+library(quarto)
+library(readr)
 library(sf)
 library(tidyr)
 library(yyjsonr)
@@ -69,98 +91,139 @@ library(yyjsonr)
 ### Set Data Directories
 
 ```{r}
+raw_data_dir <- here("data-raw", "geobr")
 data_dir <- here("pmtiles")
 ```
 
 ```{r}
-for (i in c(data_dir)) {
+for (i in c(raw_data_dir, data_dir)) {
   if (!dir_exists(i)) {
     dir_create(i, recurse = TRUE)
   }
 }
 ```
 
-### Set Initial Parameters
+### Check Parameters
 
 ::: {.callout-note}
+The pipeline main parameters are defined in the [YAML](https://en.wikipedia.org/wiki/YAML) header of its [Quarto](https://quarto.org/) document.
+
+The `fun` variable specifies which function from the [`geobr`](https://ipeagit.github.io/geobr/) R package to use as the source of data.
+
 The `code` variable specifies the IBGE code of the Brazilian territorial unit to retrieve. Use `"all"` to retrieve all units. For the full list of IBGE codes and their corresponding territorial units, see <https://sidra.ibge.gov.br/territorio>.
-:::
 
-```{r}
-# brazil_region_code("North")
-# brazil_state_code("Rio de Janeiro")
-# brazil_municipality_code("São Paulo")
-# "all" to select all units
-
-code <- 1501402
-```
-
-::: {.callout-note}
 The `year` variable specifies the year of the data.
-:::
 
-```{r}
-year <- 2020
-```
-
-::: {.callout-note}
 The `simplified` variable specifies whether to use simplified geometries for the spatial data. Simplified geometries are less detailed and have fewer vertices, which can improve performance when visualizing or processing the data, especially for large datasets.
-:::
 
-```{r}
-simplified <- TRUE
-```
+The `min_zoom` and `max_zoom` variables specify the minimum and maximum zoom levels for the PMTiles files. The zoom levels determine the level of detail and granularity of the data when visualized on a map. See the [tippecanoe documentation](https://github.com/mapbox/tippecanoe#zoom-levels) for more details on how these parameters affect the PMTiles creation process.
 
-::: {.callout-note}
-The `min_zoom` and `max_zoom` variables specify the minimum and maximum zoom levels for the PMTiles files. The zoom levels determine the level of detail and granularity of the data when visualized on a map. See [`pm_create()`](https://github.com/walkerke/pmtiles) for more details on how these parameters affect the PMTiles creation process.
-:::
-
-```{r}
-min_zoom <- 2
-```
-
-```{r}
-max_zoom <- 10
-```
-
-::: {.callout-note}
 The `h3jsr` variable specifies whether to process the spatial data with the [`h3jsr`](https://obrl-soil.github.io/h3jsr/) R package, which converts spatial geometries into [H3](https://h3geo.org/) hexagonal grid cells. If `TRUE`, the `res` variable will define the resolution of the H3 grid.
+
+The `res` variable specifies the resolution of the [H3 hexagonal grid](https://h3geo.org/). This only applies when using the [`h3jsr`](https://obrl-soil.github.io/h3jsr/) R package. See [H3 documentation](https://h3geo.org/docs/core-library/restable/) for more details on the available resolutions and their corresponding cell sizes.
 :::
 
 ```{r}
-h3jsr <- FALSE
+#| include: false
+
+if (!exists("params")) {
+  params <-
+    here("qmd", "geobr.qmd") |>
+    quarto_inspect() |>
+    pluck("formats", "html", "metadata", "params")
+
+  params |> list2env(envir = .GlobalEnv)
+}
 ```
 
-::: {.callout-note}
-The `res` variable specifies the resolution of the [H3 hexagonal grid](https://h3geo.org/). This only applies when using the [`h3jsr`](https://obrl-soil.github.io/h3jsr/) R package. See [`polygon_to_cells()`](https://obrl-soil.github.io/h3jsr/reference/polygon_to_cells.html) for more details on the available resolutions and their corresponding cell sizes.
-:::
+```{r}
+params |> lobstr::tree()
+```
 
 ```{r}
-res <- 9
+fun_choices <- c(
+  "read_municipality",
+  "read_state",
+  "read_region",
+  "read_country"
+)
+```
+
+```{r}
+assert_choice(params$fun, getNamespaceExports("geobr"))
+assert_choice(params$fun, fun_choices)
+assert_int(params$year, lower = 1500, upper = 2050)
+assert_flag(params$simplified)
+assert_int(params$min_zoom, lower = 0, upper = 22)
+assert_int(params$max_zoom, lower = 0, upper = 22)
+assert_flag(params$h3jsr)
+assert_int(params$res, lower = 0, upper = 15)
+```
+
+```{r}
+if (params$code != "all") {
+  if (params$fun == "read_municipality") {
+    assert_int(params$code, lower = 1100015, upper = 5300108)
+  } else if (params$fun == "read_state") {
+    assert_int(params$code, lower = 11, upper = 53)
+  }
+}
 ```
 
 ## Download and Import Municipalities Shapes
 
 ```{r}
 #| label: Download and Import Municipalities Shapes
-#| eval: true
+#| eval: !expr 'params$fun == "read_municipality"'
 
-name <- "read_municipality"
+read_municipality_file <-
+  raw_data_dir |>
+  file.path(
+    paste0(
+      paste(
+        "read_municipality",
+        "code",
+        params$code,
+        "year",
+        params$year,
+        "simplified",
+        params$simplified,
+        sep = "-"
+      ),
+      ".rds"
+    )
+  )
 ```
 
 ```{r}
-#| eval: true
+#| eval: !expr 'params$fun == "read_municipality"'
 
-shape <- read_municipality(
-  code_muni = code,
-  year = year,
-  simplified = simplified,
-  showProgress = FALSE
-)
+read_municipality_file
 ```
 
 ```{r}
-#| eval: true
+#| eval: !expr 'params$fun == "read_municipality"'
+
+if (!file_exists(read_municipality_file)) {
+  shape <- read_municipality(
+    code_muni = params$code,
+    year = params$year,
+    simplified = params$simplified,
+    showProgress = FALSE
+  )
+
+  shape |> write_rds(read_municipality_file)
+}
+```
+
+```{r}
+#| eval: !expr 'params$fun == "read_municipality"'
+
+shape <- read_municipality_file |> read_rds()
+```
+
+```{r}
+#| eval: !expr 'params$fun == "read_municipality"'
 
 shape |> glimpse()
 ```
@@ -169,24 +232,56 @@ shape |> glimpse()
 
 ```{r}
 #| label: Download and Import States Shapes
-#| eval: false
+#| eval: !expr 'params$fun == "read_state"'
 
-name <- "read_state"
+read_state_file <-
+  raw_data_dir |>
+  file.path(
+    paste0(
+      paste(
+        "read_state",
+        "code",
+        params$code,
+        "year",
+        params$year,
+        "simplified",
+        params$simplified,
+        sep = "-"
+      ),
+      ".rds"
+    )
+  )
 ```
 
 ```{r}
-#| eval: false
+#| eval: !expr 'params$fun == "read_state"'
 
-shape <- read_state(
-  code_state = code,
-  year = year,
-  simplified = simplified,
-  showProgress = FALSE
-)
+read_state_file
 ```
 
 ```{r}
-#| eval: false
+#| eval: !expr 'params$fun == "read_state"'
+
+if (!file_exists(read_state_file)) {
+  shape <- read_state(
+    code_state = params$code,
+    year = params$year,
+    simplified = params$simplified,
+    showProgress = FALSE
+  )
+
+  shape |> write_rds(read_state_file)
+}
+```
+
+```{r}
+#| eval: !expr 'params$fun == "read_state"'
+
+shape <- read_state_file |> read_rds()
+```
+
+```{r}
+#| eval: !expr 'params$fun == "read_state"'
 
 shape |> glimpse()
 ```
@@ -195,23 +290,53 @@ shape |> glimpse()
 
 ```{r}
 #| label: Download and Import Regions Shapes
-#| eval: false
+#| eval: !expr 'params$fun == "read_region"'
 
-name <- "read_region"
+read_region_file <-
+  raw_data_dir |>
+  file.path(
+    paste0(
+      paste(
+        "read_region",
+        "year",
+        params$year,
+        "simplified",
+        params$simplified,
+        sep = "-"
+      ),
+      ".rds"
+    )
+  )
 ```
 
 ```{r}
-#| eval: false
+#| eval: !expr 'params$fun == "read_region"'
 
-shape <- read_region(
-  year = year,
-  simplified = simplified,
-  showProgress = FALSE
-)
+read_region_file
 ```
 
 ```{r}
-#| eval: false
+#| eval: !expr 'params$fun == "read_region"'
+
+if (!file_exists(read_region_file)) {
+  shape <- read_region(
+    year = params$year,
+    simplified = params$simplified,
+    showProgress = FALSE
+  )
+
+  shape |> write_rds(read_region_file)
+}
+```
+
+```{r}
+#| eval: !expr 'params$fun == "read_region"'
+
+shape <- read_region_file |> read_rds()
+```
+
+```{r}
+#| eval: !expr 'params$fun == "read_region"'
 
 shape |> glimpse()
 ```
@@ -220,24 +345,53 @@ shape |> glimpse()
 
 ```{r}
 #| label: Download and Import Country Shape
-#| eval: false
+#| eval: !expr 'params$fun == "read_country"'
 
-name <- "read_country"
-```
-
-```{r}
-#| eval: false
-
-shape <-
-  read_country(
-    year = year,
-    simplified = FALSE,
-    showProgress = FALSE
+read_country_file <-
+  raw_data_dir |>
+  file.path(
+    paste0(
+      paste(
+        "read_country",
+        "year",
+        params$year,
+        "simplified",
+        params$simplified,
+        sep = "-"
+      ),
+      ".rds"
+    )
   )
 ```
 
 ```{r}
-#| eval: false
+#| eval: !expr 'params$fun == "read_country"'
+
+read_country_file
+```
+
+```{r}
+#| eval: !expr 'params$fun == "read_country"'
+
+if (!file_exists(read_country_file)) {
+  shape <- read_country(
+    year = params$year,
+    simplified = params$simplified,
+    showProgress = FALSE
+  )
+
+  shape |> write_rds(read_country_file)
+}
+```
+
+```{r}
+#| eval: !expr 'params$fun == "read_country"'
+
+shape <- read_country_file |> read_rds()
+```
+
+```{r}
+#| eval: !expr 'params$fun == "read_country"'
 
 shape |> glimpse()
 ```
@@ -289,38 +443,41 @@ shape |> glimpse()
 #### Set Pattern
 
 ```{r}
-if (isTRUE(h3jsr)) {
+if (isTRUE(params$h3jsr)) {
   pattern <- file.path(
     "geobr",
-    name,
+    params$fun,
     "h3jsr",
-    paste0("res-", res)
+    paste0("res-", params$res)
   )
 } else {
   pattern <- file.path(
     "geobr",
-    name
+    params$fun
   )
 }
 ```
 
 ```{r}
+pattern
+```
 
+```{r}
 pattern <-
   pattern |>
   file.path(
     paste0(
       ifelse(
-        !name %in% c("read_country", "read_region"),
-        paste0("code", "-", code, "-"),
+        !params$fun %in% c("read_country", "read_region"),
+        paste0("code", "-", params$code, "-"),
         ""
       ),
       # fmt: skip
       paste(
-      "year", year,
-      "simplified", simplified,
-      "min_zoom", min_zoom,
-      "max_zoom", max_zoom,
+      "year", params$year,
+      "simplified", params$simplified,
+      "min_zoom", params$min_zoom,
+      "max_zoom", params$max_zoom,
       sep = "-"
     ),
       ".pmtiles"
@@ -330,6 +487,15 @@ pattern <-
 
 ```{r}
 pattern
+```
+
+```{r}
+#| include: false
+#| message: NA
+
+cli_alert_info(
+  "PMTiles file pattern:\n\n{.code {pattern}}."
+)
 ```
 
 ```{r}
@@ -344,10 +510,10 @@ for (i in c(data_dir, tempdir())) {
 #### Process Shapes with `h3jsr`
 
 ```{r}
-if (isTRUE(h3jsr)) {
+if (isTRUE(params$h3jsr)) {
   shape <-
     shape |>
-    polygon_to_cells(res = res, simple = FALSE) |>
+    polygon_to_cells(res = params$res, simple = FALSE) |>
     st_drop_geometry() |>
     unnest(h3_addresses) |>
     relocate(h3_addresses) |>
@@ -363,36 +529,51 @@ shape |> glimpse()
 #### Create PMTiles
 
 ```{r}
-code <- ifelse(is.character(code), double_quote(code), code)
+code <- ifelse(
+  is.character(params$code),
+  double_quote(params$code),
+  params$code
+)
 ```
 
 ```{r}
 shape |>
   pm_create(
     output = tempdir() |> file.path(pattern),
-    layer_name = name,
-    min_zoom = min_zoom,
-    max_zoom = max_zoom,
+    layer_name = params$fun,
+    min_zoom = params$min_zoom,
+    max_zoom = params$max_zoom,
     description = glue(
-      "Tiles sourced from the {backtick(name)} function of the ",
+      "Tiles sourced from the {backtick(params$fun)} function of the ",
       "{backtick('geobr')} R package ",
       "(",
       ifelse(
-        name %in% c("read_country", "read_region"),
+        params$fun %in% c("read_country", "read_region"),
         "",
-        paste0("code", " = ", code, ", ")
+        paste0("code", " = ", params$code, ", ")
       ),
-      "year = {year}, ",
-      "simplified = {simplified}",
+      "year = {params$year}, ",
+      "simplified = {params$simplified}",
       ")",
       ifelse(
-        isTRUE(h3jsr),
-        " and processed with the {backtick('h3jsr')} R package (res = {res}). ",
+        isTRUE(params$h3jsr),
+        paste0(
+          " and processed with the {backtick('h3jsr')} R package ",
+          "(res = {params$res}). "
+        ),
         ". "
       ),
       "Created with the {backtick('pmtiles')} R package on {Sys.Date()}."
     )
   )
+```
+
+```{r}
+#| label: Test PMTiles
+
+tempdir() |>
+  file.path(pattern) |>
+  pm_show(tilejson = TRUE)
 ```
 
 ```{r}

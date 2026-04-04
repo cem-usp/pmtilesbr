@@ -1,11 +1,15 @@
 library(aws.signature)
 library(checkmate)
 library(digest)
+library(here)
 library(httr2)
 library(xml2)
 
+here("R", "r2_delete_object.R") |> source()
+here("R", "r2_list_objects.R") |> source()
+
 #' @examples
-#' r2_list_bucket("folder/")
+#' r2_delete_folder("folder/")
 
 r2_delete_folder <- function(
   prefix,
@@ -72,10 +76,10 @@ r2_delete_folder <- function(
 
 r2_list_objects <- function(
   prefix,
-  bucket_name,
-  account_id,
-  access_key_id,
-  secret_access_key,
+  bucket_name = Sys.getenv("CLOUDFLARE_BUCKET_NAME"),
+  account_id = Sys.getenv("CLOUDFLARE_ACCOUNT_ID"),
+  access_key_id = Sys.getenv("CLOUDFLARE_ACCESS_KEY_ID"),
+  secret_access_key = Sys.getenv("CLOUDFLARE_SECRET_ACCESS_KEY"),
   continuation_token = NULL
 ) {
   datetime <- Sys.time() |> format("%Y%m%dT%H%M%SZ", tz = "UTC")
@@ -127,52 +131,4 @@ r2_list_objects <- function(
     req_perform()
 
   resp |> resp_body_xml()
-}
-
-r2_delete_object <- function(
-  object_key,
-  bucket_name,
-  account_id,
-  access_key_id,
-  secret_access_key
-) {
-  datetime <- Sys.time() |> format("%Y%m%dT%H%M%SZ", tz = "UTC")
-
-  endpoint <- paste0(
-    "https://",
-    account_id,
-    ".r2.cloudflarestorage.com/",
-    bucket_name,
-    "/",
-    object_key
-  )
-
-  headers <- list(
-    "host" = paste0(account_id, ".r2.cloudflarestorage.com"),
-    "x-amz-content-sha256" = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "x-amz-date" = datetime
-  )
-
-  sig <- datetime |>
-    signature_v4_auth(
-      region = "auto",
-      service = "s3",
-      verb = "DELETE",
-      action = paste0("/", bucket_name, "/", object_key),
-      query_args = list(),
-      canonical_headers = headers,
-      request_body = "",
-      key = access_key_id,
-      secret = secret_access_key
-    )
-
-  endpoint |>
-    request() |>
-    req_method("DELETE") |>
-    req_headers(
-      "x-amz-date" = datetime,
-      "x-amz-content-sha256" = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "Authorization" = sig$SignatureHeader
-    ) |>
-    req_perform()
 }

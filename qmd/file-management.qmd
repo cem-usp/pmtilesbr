@@ -1,0 +1,291 @@
+```{r}
+#| label: setup
+#| include: false
+
+library(here)
+
+here("R", ".setup.R") |> source()
+```
+
+## Overview
+
+This document describes the processes for managing [PMTiles](https://docs.protomaps.com/pmtiles/) files created in this project, including integrity testing, listing files, and uploading or deleting files from the R2 bucket.
+
+## Methods
+
+### Code Style
+
+The Tidyverse [tidy tools manifesto](https://tidyverse.tidyverse.org/articles/manifesto.html) [@wickham2023c], [code style guide](https://style.tidyverse.org/) [@wickhama] and [design principles](https://design.tidyverse.org/) [@wickhamc] were followed to ensure consistency and enhance readability.
+
+### Reproducibility
+
+The pipeline is fully reproducible and can be run again at any time. To ensure consistent results, the [`renv`](https://rstudio.github.io/renv/) package [@ushey2025] is used to manage and restore the R environment. See the [README](https://github.com/cem-usp/pmtilesbr/blob/main/README.md) file in the code repository to learn how to run it.
+
+## Set Environment
+
+### Load Packages
+
+```{r}
+#| label: Set Environment
+#| output: false
+
+library(cli)
+library(fs)
+library(here)
+library(magrittr)
+library(pmtiles) # github.com/walkerke/pmtiles
+library(purrr)
+library(stringr)
+library(yaml)
+```
+
+### Load Custom Functions
+
+```{r}
+here("R", "r2_delete_folder.R") |> source()
+here("R", "r2_delete_object.R") |> source()
+here("R", "r2_list_bucket.R") |> source()
+here("R", "r2_list_objects.R") |> source()
+here("R", "r2_upload_file.R") |> source()
+```
+
+### Set Data Directory
+
+```{r}
+data_dir <- here("pmtiles")
+```
+
+### Set Parameters
+
+```{r}
+yaml_file <- here("pmtiles.yaml")
+```
+
+```{r}
+collection <- NULL
+```
+
+```{r}
+year <- NULL
+```
+
+```{r}
+simplified <- NULL
+```
+
+## Update `pmtiles.yaml`
+
+```{r}
+#| label: Update `pmtiles.yaml`
+
+yaml_file |> r2_list_bucket()
+```
+
+## Test and Delete Corrupted Files
+
+### List Files
+
+```{r}
+#| label: Test and Delete Corrupted Files
+
+files <-
+  data_dir |>
+  dir_ls(
+    type = "file",
+    recurse = TRUE,
+    glob = "*.pmtiles"
+  )
+```
+
+```{r}
+if (!is.null(collection)) {
+  files <-
+    data_dir |>
+    file.path(collection) |>
+    dir_ls(
+      type = "file",
+      recurse = TRUE,
+      glob = "*.pmtiles"
+    )
+}
+```
+
+```{r}
+if (!is.null(year)) {
+  files <-
+    files |>
+    str_subset(
+      paste0("year-", year)
+    )
+}
+```
+
+```{r}
+if (!is.null(simplified)) {
+  files <-
+    files |>
+    str_subset(
+      paste0("simplified-", simplified)
+    )
+}
+```
+
+### Test Files
+
+```{r}
+#| eval: false
+
+cli_progress_bar(
+  name = "Testing PMTiles",
+  total = length(files)
+)
+
+corrupted_files <- character()
+
+for (i in files) {
+  test <-
+    i |>
+    pm_show(tilejson = TRUE) |>
+    try(silent = TRUE)
+
+  if (inherits(test, "try-error")) {
+    corrupted_files <- c(corrupted_files, i)
+  }
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+```{r}
+corrupted_files |> length()
+```
+
+### Delete Files
+
+```{r}
+#| eval: false
+
+corrupted_files |> file_delete()
+```
+
+## List Files
+
+```{r}
+#| label: List Files
+
+yaml_data <- read_yaml(yaml_file)
+```
+
+```{r}
+local_files <-
+  data_dir |>
+  dir_ls(
+    type = "file",
+    recurse = TRUE,
+    glob = "*.pmtiles"
+  ) |>
+  path_rel(data_dir) |>
+  as.character()
+```
+
+```{r}
+hosted_files <-
+  yaml_data |>
+  pluck("objects") |>
+  map(\(x) x |> pluck("key")) |>
+  unlist() |>
+  str_subset("\\.pmtiles$")
+```
+
+```{r}
+local_files |> equals(hosted_files) |> all()
+```
+
+```{r}
+# Missing files
+local_files |> setdiff(hosted_files) |> length()
+```
+
+```{r}
+# Orphan files
+hosted_files |> setdiff(local_files) |> length()
+```
+
+## Upload Missing Files
+
+### List Files
+
+```{r}
+#| label: Upload Missing Files
+
+missing_files <-
+  local_files %>%
+  setdiff(hosted_files) %>%
+  file.path(data_dir, .)
+```
+
+```{r}
+missing_files |> length()
+```
+
+```{r}
+missing_files |> head()
+```
+
+### Upload Files
+
+```{r}
+#| eval: false
+
+missing_files |>
+  map(
+    .f = \(file) {
+      file |>
+        r2_upload_file(
+          object_key = file |>
+            path_rel(data_dir) |>
+            as.character()
+        )
+    },
+    .progress = TRUE
+  )
+```
+
+## Delete Orphan Files
+
+### List Files
+
+```{r}
+#| label: Delete Orphan Files
+
+orphan_files <-
+  hosted_files |>
+  setdiff(local_files)
+```
+
+```{r}
+orphan_files |> length()
+```
+
+```{r}
+orphan_files |> head()
+```
+
+### Delete Files
+
+```{r}
+#| eval: false
+
+orphan_files |>
+  map(
+    .f = r2_delete_object,
+    .progress = TRUE
+  )
+```
+
+## References {.unnumbered}
+
+::: {#refs}
+:::
