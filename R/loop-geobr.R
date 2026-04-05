@@ -1,5 +1,5 @@
 # # To Do:
-# - "read_municipality" with simplified = FALSE, year 2024 and each
+# - "read_municipality" with simplified = TRUE, year 2024 and each
 #    municipality code.
 # - Idem 2020
 # - Implement other functions (e.g,`read_amazon`, `read_census_tract`).
@@ -20,34 +20,34 @@ library(stringr)
 
 qmd_file <- here("qmd", "geobr.qmd")
 
-fun <- "read_state"
-simplified <- FALSE
+fun <- "read_municipality"
+simplified <- TRUE
 min_zoom <- 2
 max_zoom <- 10
 h3jsr <- FALSE
 res <- 9
 
-# year <- 2019
+year <- 2024
 
-year <-
-  read_state(year = 0000) |>
-  try(silent = TRUE) |>
-  as.character() |>
-  str_extract_all("\\d{4}") |>
-  unlist() |>
-  as.integer() |>
-  sort()
+# year <-
+#   read_state(year = 0000) |>
+#   try(silent = TRUE) |>
+#   as.character() |>
+#   str_extract_all("\\d{4}") |>
+#   unlist() |>
+#   as.integer() |>
+#   sort()
 
 # code <- 53
 # code <- brazil_municipality_code()
 # code <- "all"
 
-code <- c(
-  "all",
-  brazil_state_code() |>
-    unname() |>
-    sort()
-)
+# code <- c(
+#   "all",
+#   brazil_state_code() |>
+#     unname() |>
+#     sort()
+# )
 
 # code <- c(
 #   # "all",
@@ -60,11 +60,11 @@ code <- c(
 #   )
 # )
 
-# code <-
-#   read_municipality(year = year) |>
-#   arrange(1) |>
-#   pull(1) # %>%
-# # c(all", .)
+code <-
+  read_municipality(year = year) |>
+  arrange(1) |>
+  pull(1) # %>%
+# c(all", .)
 
 # code <-
 #   here("pmtiles", "geobr", "read_municipality") |>
@@ -107,7 +107,6 @@ for (i in code) {
           h3jsr = h3jsr,
           res = res
         )
-        # quarto_args = c("--output", "-")
       )
 
     gc()

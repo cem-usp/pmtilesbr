@@ -15,7 +15,7 @@ params:
 ---
 
 ```{r}
-#| label: setup
+#| label: Setup
 #| include: false
 
 library(here)
@@ -65,7 +65,7 @@ The pipeline is fully reproducible and can be run again at any time. To ensure c
 ### Load Packages
 
 ```{r}
-#| label: Set the Environment
+#| label: Set Environment
 #| output: false
 
 library(cli)
