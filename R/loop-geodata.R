@@ -1,3 +1,6 @@
+# # To Do:
+# - "gadm" for each country, with different levels and resolutions.
+
 # Load Packages -----
 
 library(beepr)

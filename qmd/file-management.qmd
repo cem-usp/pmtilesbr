@@ -250,7 +250,8 @@ missing_files |>
         )
     },
     .progress = TRUE
-  )
+  ) |>
+  invisible()
 ```
 
 ## Delete Orphan Files

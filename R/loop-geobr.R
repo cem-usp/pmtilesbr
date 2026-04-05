@@ -1,3 +1,9 @@
+# # To Do:
+# - "read_municipality" with simplified = FALSE, year 2024 and each
+#    municipality code.
+# - Idem 2020
+# - Implement other functions (e.g,`read_amazon`, `read_census_tract`).
+
 # Load Packages -----
 
 library(beepr)
@@ -15,7 +21,7 @@ library(stringr)
 qmd_file <- here("qmd", "geobr.qmd")
 
 fun <- "read_state"
-simplified <- TRUE
+simplified <- FALSE
 min_zoom <- 2
 max_zoom <- 10
 h3jsr <- FALSE

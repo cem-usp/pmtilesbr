@@ -719,7 +719,7 @@ https://tiles.pmtiles.com.br/
 Where:
 
 - `collection`: The data collection name, typically the source R package (e.g., [`geobr`](https://ipeagit.github.io/geobr/)).
-- `function`: The function used to source the data (e.g., [`read_municipality()`](https://ipeagit.github.io/geobr/reference/read_municipality.html)).
+- `function`: The function used to source the data (e.g., [`read_municipality`](https://ipeagit.github.io/geobr/reference/read_municipality.html)).
 - `parameters-values`: The parameter names and values passed to the function.
 - `min_zoom-value`: The minimum [zoom level](https://github.com/felt/tippecanoe#zoom-levels).
 - `max_zoom-value`: The maximum [zoom level](https://github.com/felt/tippecanoe#zoom-levels).
@@ -959,7 +959,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 [![](images/cem-icon.svg){width="190"}](https://centrodametropole.fflch.usp.br)
 :::
 ::: {.column style="width: 70%; display: flex; align-items: center;"}
-This work was developed with support from the Center for Metropolitan Studies ([CEM](https://centrodametropole.fflch.usp.br)) based at the School of Philosophy, Letters and Human Sciences ([FFLCH](https://www.fflch.usp.br/)) of the University of São Paulo ([USP](https://usp.br/)) and at the Brazilian Center for Analysis and Planning ([CEBRAP](https://cebrap.org.br/)).
+This project was developed with support from the Center for Metropolitan Studies ([CEM](https://centrodametropole.fflch.usp.br)) based at the School of Philosophy, Letters and Human Sciences ([FFLCH](https://www.fflch.usp.br/)) of the University of São Paulo ([USP](https://usp.br/)) and at the Brazilian Center for Analysis and Planning ([CEBRAP](https://cebrap.org.br/)).
 :::
 ::::
 
@@ -968,7 +968,7 @@ This work was developed with support from the Center for Metropolitan Studies ([
 [![](images/fapesp-logo.svg){width="160"}](https://fapesp.br/)
 :::
 ::: {.column style="width: 70%; display: flex; align-items: center;"}
-This study was financed, in part, by the São Paulo Research Foundation ([FAPESP](https://fapesp.br/)), Brazil. Process Number [2025/17879-2](https://bv.fapesp.br/en/bolsas/231507/geospatial-data-science-applied-to-food-policies/).
+This project was financed, in part, by the São Paulo Research Foundation ([FAPESP](https://fapesp.br/)), Brazil. Process Number [2025/17879-2](https://bv.fapesp.br/en/bolsas/231507/geospatial-data-science-applied-to-food-policies/).
 :::
 ::::
 
