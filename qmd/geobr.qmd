@@ -1,5 +1,4 @@
 ---
-# See Set Environment > Check Parameters to learn more.
 params:
   fun: "read_municipality"
   # code <- brazil_municipality_code("São Paulo")
@@ -209,7 +208,7 @@ if (!file_exists(read_municipality_file)) {
     code_muni = params$code,
     year = params$year,
     simplified = params$simplified,
-    showProgress = FALSE
+    showProgress = TRUE
   )
 
   shape |> write_rds(read_municipality_file)
@@ -267,7 +266,7 @@ if (!file_exists(read_state_file)) {
     code_state = params$code,
     year = params$year,
     simplified = params$simplified,
-    showProgress = FALSE
+    showProgress = TRUE
   )
 
   shape |> write_rds(read_state_file)
@@ -322,7 +321,7 @@ if (!file_exists(read_region_file)) {
   shape <- read_region(
     year = params$year,
     simplified = params$simplified,
-    showProgress = FALSE
+    showProgress = TRUE
   )
 
   shape |> write_rds(read_region_file)
@@ -377,7 +376,7 @@ if (!file_exists(read_country_file)) {
   shape <- read_country(
     year = params$year,
     simplified = params$simplified,
-    showProgress = FALSE
+    showProgress = TRUE
   )
 
   shape |> write_rds(read_country_file)

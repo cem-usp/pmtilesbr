@@ -159,6 +159,8 @@ cli_progress_done()
 ```
 
 ```{r}
+#| eval: false
+
 corrupted_files |> length()
 ```
 
@@ -197,10 +199,6 @@ hosted_files <-
   map(\(x) x |> pluck("key")) |>
   unlist() |>
   str_subset("\\.pmtiles$")
-```
-
-```{r}
-local_files |> equals(hosted_files) |> all()
 ```
 
 ```{r}

@@ -1,6 +1,4 @@
 # # To Do:
-# - "gadm" for each country, with different levels and resolutions.
-# - "gadm" for each country, with h3jsr == TRUE.
 # - "world" with different resolutions.
 
 # Load Packages -----
@@ -8,59 +6,94 @@
 library(beepr)
 library(cli)
 library(fs)
+library(geodata)
 library(here)
 library(ISOcodes)
+library(magrittr)
 library(orbis) # github.com/danielvartan/orbis
 library(quarto)
+library(stringr)
 
 # Set Parameters -----
 
 qmd_file <- here("qmd", "geodata.qmd")
 
-fun <- "gadm" # "gadm" | "world"
+raw_data_dir <- here("data-raw")
+
+fun <- "world" # "gadm" | "world"
 level <- 0 # 0-1 (gadm()) | 0 (world())
 version <- "latest"
-resolution <- 1 # 1-2 (gadm()) | 1-5 (world())
-min_zoom <- 2
+resolution <- 3 # 1-2 (gadm()) | 1-5 (world())
+min_zoom <- 0
 max_zoom <- 10
 h3jsr <- FALSE
 res <- 9
 
-# country <- "BRA"
+# https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
 
-country <-
-  country_names(format = "alpha 3") |>
-  unname()
+country <- "BRA"
 
-# length(country_choices)
+# country <-
+#   country_names(format = "alpha 3") |>
+#   str_subset("ATA|HKG|MAC", negate = TRUE) |>
+#   unname() # %>%
+# # magrittr::extract(seq(133, length(.)))
+
+# fmt: skip
+# country <- c(
+#   "ABW", "ALA", "AND", "ARM", "BHS", "GUM", "IMN", "LIE", "SGP", "TUV"
+# )
+
+# length(country)
 
 # Perform Loop -----
 
 for (i in country) {
-  for (j in year) {
-    cli_progress_step(
-      paste0("Processing code ", i, " for year ", j)
+  cli_progress_step(
+    paste0("Processing country code ", i)
+  )
+
+  if (fun == "gadm") {
+    test <-
+      i |>
+      gadm(
+        level = level,
+        path = raw_data_dir,
+        version = version,
+        resolution = resolution
+      )
+  } else if (fun == "world") {
+    test <-
+      world(
+        resolution = resolution,
+        level = level,
+        path = raw_data_dir,
+        version = version
+      )
+  }
+
+  if (is.null(test)) {
+    next
+  }
+
+  qmd_file |>
+    quarto_render(
+      execute_params = list(
+        fun = fun,
+        country = i,
+        level = level,
+        version = version,
+        resolution = resolution,
+        min_zoom = min_zoom,
+        max_zoom = max_zoom,
+        h3jsr = h3jsr,
+        res = res
+      )
     )
 
-    qmd_file |>
-      quarto_render(
-        execute_params = list(
-          fun = fun,
-          country = i,
-          level = level,
-          version = version,
-          resolution = resolution,
-          min_zoom = min_zoom,
-          max_zoom = max_zoom,
-          h3jsr = h3jsr,
-          res = res
-        )
-      )
+  gc()
 
-    gc()
-
-    cli_progress_done()
-  }
+  cli_progress_done()
 }
 
 # Finishing Up -----

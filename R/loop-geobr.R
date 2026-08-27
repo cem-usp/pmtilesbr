@@ -1,7 +1,7 @@
 # # To Do:
 # - "read_municipality" with simplified = TRUE, year 2024 and each
 #    municipality code.
-# - Idem 2020
+# - Idem 2022
 # - Implement other functions (e.g,`read_amazon`, `read_census_tract`).
 
 # Load Packages -----
@@ -21,16 +21,16 @@ library(stringr)
 qmd_file <- here("qmd", "geobr.qmd")
 
 fun <- "read_municipality"
-simplified <- TRUE
+simplified <- FALSE
 min_zoom <- 2
 max_zoom <- 10
 h3jsr <- FALSE
 res <- 9
 
-year <- 2024
+# year <- 2024
 
 # year <-
-#   read_state(year = 0000) |>
+#   read_municipality(year = 0000) |>
 #   try(silent = TRUE) |>
 #   as.character() |>
 #   str_extract_all("\\d{4}") |>
@@ -38,9 +38,11 @@ year <- 2024
 #   as.integer() |>
 #   sort()
 
+year <- c(2021, 2023, 2025)
+
 # code <- 53
 # code <- brazil_municipality_code()
-# code <- "all"
+code <- "all"
 
 # code <- c(
 #   "all",
@@ -60,10 +62,10 @@ year <- 2024
 #   )
 # )
 
-code <-
-  read_municipality(year = year) |>
-  arrange(1) |>
-  pull(1) # %>%
+# code <-
+#   read_municipality(year = year) |>
+#   arrange(1) |>
+#   pull(1) # %>%
 # c(all", .)
 
 # code <-

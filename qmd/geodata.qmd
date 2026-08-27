@@ -1,5 +1,4 @@
 ---
-# See Set Environment > Check Parameters to learn more.
 params:
   fun: "gadm"
   country: "ARM"
